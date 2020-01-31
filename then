@@ -3,8 +3,8 @@
 
 require __DIR__.'/vendor/autoload.php';
 
-use Symfony\Component\Console\Application;
+use ThenLabs\Cli\Application;
 
-$application = new Application();
+$application = new Application;
 
 $application->run();

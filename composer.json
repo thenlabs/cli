@@ -22,5 +22,9 @@
         "psr-4": {
             "ThenLabs\\Cli\\Tests\\": "tests/"
         }
+    },
+    "require-dev": {
+        "andaniel05/pyramidaltests": "dev-master",
+        "mikey179/vfsStream": "~1"
     }
 }
