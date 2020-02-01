@@ -42,6 +42,25 @@ testCase('ApplicationTest.php', function () {
             $this->assertContains('the composer.lock file is missing.', $output);
         });
 
+        testCase('exists an invalid composer.lock file', function () {
+            setUp(function () {
+                $this->composerLockFile = new vfsStreamFile('composer.lock');
+                $this->composerLockFile->setContent(uniqid());
+
+                $this->rootDir->addChild($this->composerLockFile);
+            });
+
+            test('shows error message when the composer.lock file is invalid', function () {
+                $this->commandTester->execute([
+                    'directory' => vfsStream::url($this->rootDirName)
+                ]);
+
+                $output = $this->commandTester->getDisplay();
+
+                $this->assertContains('the composer.lock file is corrupt.', $output);
+            });
+        });
+
         testCase('exists a composer.lock file that contains two thenlabs packages', function () {
             setUp(function () {
                 $this->composerLockContent = [
@@ -67,7 +86,7 @@ testCase('ApplicationTest.php', function () {
                 $this->rootDir->addChild($this->composerLockFile);
             });
 
-            test('', function () {
+            test('prints the expected packages', function () {
                 $this->commandTester->execute([
                     'directory' => vfsStream::url($this->rootDirName)
                 ]);
