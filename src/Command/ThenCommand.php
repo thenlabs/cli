@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ThenCommand extends Command
 {
-    public function getInstalledPackages(InputInterface $input, OutputInterface $output): array
+    protected function getInstalledPackages(InputInterface $input, OutputInterface $output): array
     {
         $composerLockFile = $input->getArgument('directory') . '/composer.lock';
         $installedPackages = [];
