@@ -24,6 +24,8 @@ class InstallAssetsCommand extends ThenCommand
     {
         $this->getInstalledPackages($input, $output);
 
+        $output->writeln('Installation success.');
+
         return 0;
     }
 }

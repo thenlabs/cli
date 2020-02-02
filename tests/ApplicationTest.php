@@ -158,7 +158,7 @@ testCase('ApplicationTest.php', function () {
                 });
 
                 test('name of the test', function () {
-                    $this->assertContains('installation success.', $this->output);
+                    $this->assertContains('Installation success.', $this->output);
                 });
             });
         });
