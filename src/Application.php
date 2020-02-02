@@ -15,5 +15,6 @@ class Application extends SymfonyApplication
         parent::__construct();
 
         $this->add(new Command\Listing\InstalledPackagesCommand);
+        $this->add(new Command\Install\AssetsCommand);
     }
 }

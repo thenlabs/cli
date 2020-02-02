@@ -9,6 +9,7 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamWrapper;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamFile;
+use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
 
 setTestCaseNamespace(__NAMESPACE__);
 setTestCaseClass(TestCase::class);
@@ -17,16 +18,16 @@ testCase('ApplicationTest.php', function () {
     setUp(function () {
         vfsStreamWrapper::register();
 
-        $this->rootDirName = uniqid('dir');
-        $this->rootDir = new vfsStreamDirectory($this->rootDirName);
-
-        vfsStreamWrapper::setRoot($this->rootDir);
-
         $this->application = new Application;
     });
 
     testCase('list:installed-packages', function () {
         setUp(function () {
+            $this->rootDirName = uniqid('dir');
+            $this->rootDir = new vfsStreamDirectory($this->rootDirName);
+
+            vfsStreamWrapper::setRoot($this->rootDir);
+
             $this->command = $this->application->find('list:installed-packages');
             $this->commandTester = new CommandTester($this->command);
         });
@@ -60,13 +61,13 @@ testCase('ApplicationTest.php', function () {
             });
         });
 
-        testCase('exists a composer.lock file that contains two thenlabs packages', function () {
+        testCase('exists a composer.lock file that contains two then packages', function () {
             setUp(function () {
                 $this->composerLockContent = [
                     'packages' => [
                         [
                             'name' => uniqid('package'),
-                            'type' => 'thenlabs-package',
+                            'type' => 'then-package',
                         ],
                         [
                             'name' => uniqid('library'),
@@ -74,7 +75,7 @@ testCase('ApplicationTest.php', function () {
                         ],
                         [
                             'name' => uniqid('package'),
-                            'type' => 'thenlabs-package',
+                            'type' => 'then-package',
                         ],
                     ]
                 ];
@@ -104,6 +105,63 @@ testCase('ApplicationTest.php', function () {
                     $this->composerLockContent['packages'][2]['name'],
                     $output
                 );
+            });
+        });
+    });
+
+    testCase('exists a thenlabs package', function () {
+        setUp(function () {
+            $this->targetDir = uniqid('assets');
+            $this->assetsDirOfThePackage = uniqid('assets');
+
+            $this->vendorName = uniqid('vendor');
+            $this->packageName = uniqid('package');
+
+            $this->file1 = uniqid('file1');
+            $this->file2 = uniqid('file2');
+            $this->dir1 = uniqid('dir1');
+
+            $structure = [
+                $this->targetDir => [],
+                'vendor' => [
+                    $this->vendorName => [
+                        $this->packageName => [
+                            $this->assetsDirOfThePackage = [
+                                $this->file1,
+                                $this->dir1 => [
+                                    $this->file1
+                                ]
+                            ],
+                            'then-package.json' => json_encode([
+                                'assets' => [
+                                    $this->assetsDirOfThePackage,
+                                ]
+                            ])
+                        ]
+                    ],
+                ],
+                'then.json' => json_encode([
+                    'targetAssetsDir' => $this->targetDir
+                ]),
+            ];
+
+            vfsStream::setup('root', null, $structure);
+        });
+
+        testCase('runs the install:assets command', function () {
+            setUp(function () {
+                $this->command = $this->application->find('install:assets');
+                $this->commandTester = new CommandTester($this->command);
+
+                $this->commandTester->execute([
+                    'directory' => vfsStream::url('root')
+                ]);
+
+                $this->output = $this->commandTester->getDisplay();
+            });
+
+            test('name of the test', function () {
+                $this->assertContains('installation success.', $this->output);
             });
         });
     });

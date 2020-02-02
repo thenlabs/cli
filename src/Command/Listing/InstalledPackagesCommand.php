@@ -15,7 +15,7 @@ class InstalledPackagesCommand extends Command
     protected function configure()
     {
         $this
-            ->setDescription('Lists all the installed packages that type is "thenlabs-package".')
+            ->setDescription('Lists all the installed packages that type is "then-package".')
             ->addArgument('directory', InputArgument::OPTIONAL, '', getcwd())
         ;
     }
@@ -36,7 +36,7 @@ class InstalledPackagesCommand extends Command
         }
 
         foreach ($content->packages as $package) {
-            if ($package->type == 'thenlabs-package') {
+            if ($package->type == 'then-package') {
                 $output->writeln($package->name);
             }
         }
