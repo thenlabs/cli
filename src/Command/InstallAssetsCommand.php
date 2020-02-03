@@ -22,25 +22,30 @@ class InstallAssetsCommand extends ThenCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        // $directory = $input->getArgument('directory');
         $installedPackages = $this->getInstalledPackages($input, $output);
         $thenJson = $this->getThenJson($input, $output);
-        // $filesystem = new Filesystem;
 
-        // foreach ($installedPackages as $package) {
-        //     // [$vendor, $project] = explode('/', $package);
+        if (! isset($thenJson->targetAssetsDir)) {
+            return 0;
+        }
 
-        //     $packageDir = "{$directory}/vendor/{$package}";
-        //     $thenPackage = file_get_contents($packageDir.'/then-package.json');
+        $directory = $input->getArgument('directory');
+        $targetAssetsDir = $directory.'/'.$thenJson->targetAssetsDir;
 
-        //     foreach ($thenPackage['assets'] as $assetsDir) {
+        $filesystem = new Filesystem;
 
-        //     }
+        foreach ($installedPackages as $package) {
+            $packageDir = "{$directory}/vendor/{$package}";
+            $thenPackage = json_decode(file_get_contents($packageDir.'/then-package.json'));
 
-        //     $filesystem->mirror();
-        // }
+            if (! $filesystem->exists($targetAssetsDir)) {
+                $filesystem->mkdir($targetAssetsDir);
+            }
 
-        // $output->writeln('The "then.json" file is missing.');
+            foreach ($thenPackage->assets as $assetsDir) {
+                $filesystem->mirror($packageDir.'/'.$assetsDir, $targetAssetsDir);
+            }
+        }
 
         return 0;
     }

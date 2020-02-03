@@ -151,7 +151,7 @@ testCase('ApplicationTest.php', function () {
                     'vendor' => [
                         $this->vendorName => [
                             $this->packageName => [
-                                $this->assetsDirOfThePackage = [
+                                $this->assetsDirOfThePackage => [
                                     $this->file1,
                                     $this->dir1 => [
                                         $this->file1
@@ -165,34 +165,38 @@ testCase('ApplicationTest.php', function () {
                             ]
                         ],
                     ],
+                    'composer.lock' => json_encode([
+                        'packages' => [
+                            [
+                                'name' => $this->vendorName.'/'.$this->packageName,
+                                'type' => 'then-package',
+                            ]
+                        ]
+                    ]),
                     'then.json' => json_encode([
                         'targetAssetsDir' => $this->targetDir
                     ]),
                 ];
 
-                vfsStream::setup('root', null, $this->structure);
+                vfsStream::setup($this->rootDirName, null, $this->structure);
             });
 
-            // testCase('runs the install:assets command', function () {
-            //     setUp(function () {
-            //         $this->runCommand('install:assets', []);
-            //     });
+            testCase('runs the install:assets command', function () {
+                setUp(function () {
+                    $this->runCommand('install:assets', []);
+                });
 
-            //     test('all files they are copied', function () {
-            //         $currentStructure = vfsStream::inspect(new vfsStreamStructureVisitor)->getStructure();
+                test('all files they are copied', function () {
+                    $currentStructure = vfsStream::inspect(new vfsStreamStructureVisitor)->getStructure();
 
-            //         $this->assertEquals(
-            //             $this->structure['vendor'],
-            //             $currentStructure['root'][$this->targetDir]
-            //         );
-            //     });
+                    $this->assertEquals(
+                        $this->structure['vendor'][$this->vendorName][$this->packageName][$this->assetsDirOfThePackage],
+                        $currentStructure[$this->rootDirName][$this->targetDir]
+                    );
+                });
 
-            //     test('shows the success message', function () {
-            //         $this->assertContains('Installation success.', $this->output);
-            //     });
-
-            //     testIncomplete('create progress for the copy process');
-            // });
+                testIncomplete('create progress for the copy process');
+            });
         });
     });
 });

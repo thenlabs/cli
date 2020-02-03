@@ -50,7 +50,7 @@ class ThenCommand extends Command
             return;
         }
 
-        $thenJson = file_get_contents($thenJsonFile);
+        $thenJson = json_decode(file_get_contents($thenJsonFile));
 
         if (! is_object($thenJson)) {
             $output->writeln('The "then.json" file is corrupt.');
