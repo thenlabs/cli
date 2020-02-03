@@ -111,6 +111,27 @@ testCase('ApplicationTest.php', function () {
                     $this->output
                 );
             });
+
+            test('the command "install:assets" shows message The "then.json" file is missing.', function () {
+                $this->runCommand('install:assets', []);
+
+                $this->assertContains('The "then.json" file is missing.', $this->output);
+            });
+
+            testCase('exists an invalid then.json file', function () {
+                setUp(function () {
+                    $this->thenJsonFile = new vfsStreamFile('then.json');
+                    $this->thenJsonFile->setContent(uniqid());
+
+                    $this->rootDir->addChild($this->thenJsonFile);
+                });
+
+                test('the command "install:assets" shows message The "then.json" file is corrupt.', function () {
+                    $this->runCommand('install:assets', []);
+
+                    $this->assertContains('The "then.json" file is corrupt.', $this->output);
+                });
+            });
         });
 
         testCase('exists a thenlabs package', function () {
@@ -125,7 +146,7 @@ testCase('ApplicationTest.php', function () {
                 $this->file2 = uniqid('file2');
                 $this->dir1 = uniqid('dir1');
 
-                $structure = [
+                $this->structure = [
                     $this->targetDir => [],
                     'vendor' => [
                         $this->vendorName => [
@@ -149,18 +170,29 @@ testCase('ApplicationTest.php', function () {
                     ]),
                 ];
 
-                vfsStream::setup('root', null, $structure);
+                vfsStream::setup('root', null, $this->structure);
             });
 
-            testCase('runs the install:assets command', function () {
-                setUp(function () {
-                    $this->runCommand('install:assets', []);
-                });
+            // testCase('runs the install:assets command', function () {
+            //     setUp(function () {
+            //         $this->runCommand('install:assets', []);
+            //     });
 
-                test('name of the test', function () {
-                    $this->assertContains('Installation success.', $this->output);
-                });
-            });
+            //     test('all files they are copied', function () {
+            //         $currentStructure = vfsStream::inspect(new vfsStreamStructureVisitor)->getStructure();
+
+            //         $this->assertEquals(
+            //             $this->structure['vendor'],
+            //             $currentStructure['root'][$this->targetDir]
+            //         );
+            //     });
+
+            //     test('shows the success message', function () {
+            //         $this->assertContains('Installation success.', $this->output);
+            //     });
+
+            //     testIncomplete('create progress for the copy process');
+            // });
         });
     });
 });

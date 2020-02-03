@@ -13,6 +13,11 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ThenCommand extends Command
 {
+    protected function configure()
+    {
+        $this->addArgument('directory', InputArgument::OPTIONAL, '', getcwd());
+    }
+
     protected function getInstalledPackages(InputInterface $input, OutputInterface $output): array
     {
         $composerLockFile = $input->getArgument('directory') . '/composer.lock';
@@ -34,5 +39,23 @@ class ThenCommand extends Command
         }
 
         return $installedPackages;
+    }
+
+    protected function getThenJson(InputInterface $input, OutputInterface $output)
+    {
+        $thenJsonFile = $input->getArgument('directory') . '/then.json';
+
+        if (! file_exists($thenJsonFile)) {
+            $output->writeln('The "then.json" file is missing.');
+            return;
+        }
+
+        $thenJson = file_get_contents($thenJsonFile);
+
+        if (! is_object($thenJson)) {
+            $output->writeln('The "then.json" file is corrupt.');
+        }
+
+        return $thenJson;
     }
 }

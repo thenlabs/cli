@@ -7,6 +7,7 @@ use ThenLabs\Cli\Command\ThenCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 class InstallAssetsCommand extends ThenCommand
 {
@@ -14,17 +15,32 @@ class InstallAssetsCommand extends ThenCommand
 
     protected function configure()
     {
-        $this
-            ->setDescription('Install the assets files of the installed then packages')
-            ->addArgument('directory', InputArgument::OPTIONAL, '', getcwd())
-        ;
+        parent::configure();
+
+        $this->setDescription('Install the assets files of the installed then packages');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getInstalledPackages($input, $output);
+        // $directory = $input->getArgument('directory');
+        $installedPackages = $this->getInstalledPackages($input, $output);
+        $thenJson = $this->getThenJson($input, $output);
+        // $filesystem = new Filesystem;
 
-        $output->writeln('Installation success.');
+        // foreach ($installedPackages as $package) {
+        //     // [$vendor, $project] = explode('/', $package);
+
+        //     $packageDir = "{$directory}/vendor/{$package}";
+        //     $thenPackage = file_get_contents($packageDir.'/then-package.json');
+
+        //     foreach ($thenPackage['assets'] as $assetsDir) {
+
+        //     }
+
+        //     $filesystem->mirror();
+        // }
+
+        // $output->writeln('The "then.json" file is missing.');
 
         return 0;
     }
