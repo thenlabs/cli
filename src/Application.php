@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace ThenLabs\Cli;
 
-use Symfony\Component\Console\Application as SymfonyApplication;
+use Symfony\Component\Console\Application as SymfonyConsoleApplication;
 
 /**
  * @author Andy Daniel Navarro Taño <andaniel05@gmail.com>
  */
-class Application extends SymfonyApplication
+class Application extends SymfonyConsoleApplication
 {
     public function __construct()
     {

@@ -32,10 +32,10 @@ class ThenCommand extends Command
                     }
                 }
             } else {
-                $output->writeln('the composer.lock file is corrupt.');
+                $output->writeln('The composer.lock file is corrupt.');
             }
         } else {
-            $output->writeln('the composer.lock file is missing.');
+            $output->writeln('The composer.lock file is missing.');
         }
 
         return $installedPackages;
