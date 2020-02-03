@@ -49,7 +49,7 @@ testCase('ApplicationTest.php', function () {
             test("the commmand '{$command}' shows error message when the composer.lock file is missing", function () use ($command) {
                 $this->runCommand($command, []);
 
-                $this->assertContains('the composer.lock file is missing.', $this->output);
+                $this->assertContains('The composer.lock file is missing.', $this->output);
             });
         }
 
@@ -65,7 +65,7 @@ testCase('ApplicationTest.php', function () {
                 test("the command '{$command}' shows error message when the composer.lock file is invalid", function () use ($command) {
                     $this->runCommand($command, []);
 
-                    $this->assertContains('the composer.lock file is corrupt.', $this->output);
+                    $this->assertContains('The composer.lock file is corrupt.', $this->output);
                 });
             }
         });
