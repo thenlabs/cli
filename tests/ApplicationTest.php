@@ -189,7 +189,7 @@ testCase('ApplicationTest.php', function () {
                 test('all files they are copied', function () {
                     $currentStructure = vfsStream::inspect(new vfsStreamStructureVisitor)->getStructure();
 
-                    $this->assertEquals(
+                    $this->assertArraySubset(
                         $this->structure['vendor'][$this->vendorName][$this->packageName][$this->assetsDirOfThePackage],
                         $currentStructure[$this->rootDirName][$this->targetDir]
                     );
