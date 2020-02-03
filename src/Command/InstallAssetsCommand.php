@@ -7,7 +7,6 @@ use ThenLabs\Cli\Command\ThenCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Filesystem;
 
 class InstallAssetsCommand extends ThenCommand
 {
@@ -32,18 +31,12 @@ class InstallAssetsCommand extends ThenCommand
         $directory = $input->getArgument('directory');
         $targetAssetsDir = $directory.'/'.$thenJson->targetAssetsDir;
 
-        $filesystem = new Filesystem;
-
         foreach ($installedPackages as $package) {
             $packageDir = "{$directory}/vendor/{$package}";
             $thenPackage = json_decode(file_get_contents($packageDir.'/then-package.json'));
 
-            if (! $filesystem->exists($targetAssetsDir)) {
-                $filesystem->mkdir($targetAssetsDir);
-            }
-
             foreach ($thenPackage->assets as $assetsDir) {
-                $filesystem->mirror($packageDir.'/'.$assetsDir, $targetAssetsDir);
+                $this->copyDirectory($packageDir.'/'.$assetsDir, $targetAssetsDir);
             }
         }
 
