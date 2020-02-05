@@ -27,14 +27,22 @@ class InstallAssetsCommand extends ThenCommand
         }
 
         $directory = $input->getArgument('directory');
-        $targetAssetsDir = $directory.'/'.$thenJson->targetAssetsDir;
+        // $targetAssetsDir = $directory.'/'.$thenJson->targetAssetsDir;
 
         foreach ($installedPackages as $package) {
             $packageDir = "{$directory}/vendor/{$package}";
+            $targetAssetsDir = $directory.'/'.$thenJson->targetAssetsDir.'/'.$package;
+
+            if (! is_dir($targetAssetsDir)) {
+                mkdir($targetAssetsDir, 0777, true);
+            }
+
             $thenPackage = json_decode(file_get_contents($packageDir.'/then-package.json'));
 
-            foreach ($thenPackage->assets as $assetsDir) {
-                $this->copyDirectory($packageDir.'/'.$assetsDir, $targetAssetsDir);
+            foreach ($thenPackage->assetsDir as $assetsDir) {
+                $packageAssetsDir = $packageDir.'/'.$assetsDir;
+
+                $this->copyDirectory($packageAssetsDir, $targetAssetsDir);
             }
         }
 

@@ -13,10 +13,9 @@ class ListInstalledPackagesCommand extends ThenCommand
 
     protected function configure()
     {
-        $this
-            ->setDescription('Lists all the installed packages that type is "then-package".')
-            ->addArgument('directory', InputArgument::OPTIONAL, '', getcwd())
-        ;
+        parent::configure();
+
+        $this->setDescription('Lists all the installed packages that type is "then-package".');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

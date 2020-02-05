@@ -136,62 +136,26 @@ testCase('ApplicationTest.php', function () {
 
         testCase('exists a thenlabs package', function () {
             setUp(function () {
-                $this->targetDir = uniqid('assets');
-                $this->assetsDirOfThePackage = uniqid('assets');
+                vfsStream::copyFromFileSystem(__DIR__.'/directory');
 
-                $this->vendorName = uniqid('vendor');
-                $this->packageName = uniqid('package');
+                $this->structure1 = $this->getStructure();
+            });
 
-                $this->file1 = uniqid('file1');
-                $this->file2 = uniqid('file2');
-                $this->dir1 = uniqid('dir1');
-
-                $this->structure = [
-                    $this->targetDir => [],
-                    'vendor' => [
-                        $this->vendorName => [
-                            $this->packageName => [
-                                $this->assetsDirOfThePackage => [
-                                    $this->file1,
-                                    $this->dir1 => [
-                                        $this->file1
-                                    ]
-                                ],
-                                'then-package.json' => json_encode([
-                                    'assets' => [
-                                        $this->assetsDirOfThePackage,
-                                    ]
-                                ])
-                            ]
-                        ],
-                    ],
-                    'composer.lock' => json_encode([
-                        'packages' => [
-                            [
-                                'name' => $this->vendorName.'/'.$this->packageName,
-                                'type' => 'then-package',
-                            ]
-                        ]
-                    ]),
-                    'then.json' => json_encode([
-                        'targetAssetsDir' => $this->targetDir
-                    ]),
-                ];
-
-                vfsStream::setup($this->rootDirName, null, $this->structure);
+            createMethod('getStructure', function () {
+                return vfsStream::inspect(new vfsStreamStructureVisitor)->getStructure();
             });
 
             testCase('runs the install:assets command', function () {
                 setUp(function () {
                     $this->runCommand('install:assets', []);
+
+                    $this->structure2 = $this->getStructure();
                 });
 
                 test('all files they are copied', function () {
-                    $currentStructure = vfsStream::inspect(new vfsStreamStructureVisitor)->getStructure();
-
-                    $this->assertArraySubset(
-                        $this->structure['vendor'][$this->vendorName][$this->packageName][$this->assetsDirOfThePackage],
-                        $currentStructure[$this->rootDirName][$this->targetDir]
+                    $this->assertEquals(
+                        $this->structure2[$this->rootDirName]['vendor']['vendor1']['package11']['assets'],
+                        $this->structure2[$this->rootDirName]['public']['vendor1']['package11']
                     );
                 });
 
