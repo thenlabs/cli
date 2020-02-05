@@ -166,6 +166,22 @@ testCase('ApplicationTest.php', function () {
                     );
                 });
 
+                // test('the file1.json has been created and merged successfull', function () {
+                //     $expectedContent = [
+                //         'data1' => 'value1',
+                //         'data2' => 'value2',
+                //         'data3' => 'value3',
+                //         'data4' => 'value4',
+                //         'data5' => 'value5',
+                //         'data6' => 'value6',
+                //     ];
+
+                //     $this->assertEquals(
+                //         $expectedContent,
+                //         json_decode($this->structure2[$this->rootDirName]['public']['file1.json'], true)
+                //     );
+                // });
+
                 testIncomplete('create progress for the copy process');
             });
         });

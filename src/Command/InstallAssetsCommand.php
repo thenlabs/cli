@@ -38,10 +38,12 @@ class InstallAssetsCommand extends ThenCommand
 
             $thenPackage = json_decode(file_get_contents($packageDir.'/then-package.json'));
 
-            foreach ($thenPackage->assetsDir as $assetsDir) {
-                $packageAssetsDir = $packageDir.'/'.$assetsDir;
+            if (isset($thenPackage->assetsDir) && is_array($thenPackage->assetsDir)) {
+                foreach ($thenPackage->assetsDir as $assetsDir) {
+                    $packageAssetsDir = $packageDir.'/'.$assetsDir;
 
-                $this->copyDirectory($packageAssetsDir, $targetAssetsDir);
+                    $this->copyDirectory($packageAssetsDir, $targetAssetsDir);
+                }
             }
         }
 

@@ -9,6 +9,10 @@
             "type": "library"
         },
         {
+            "name": "vendor1/package13",
+            "type": "then-package"
+        },
+        {
             "name": "vendor2/package21",
             "type": "then-package"
         }
