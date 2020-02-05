@@ -181,8 +181,6 @@ testCase('ApplicationTest.php', function () {
                         json_decode($this->structure2[$this->rootDirName]['public']['file1.json'], true)
                     );
                 });
-
-                testIncomplete('create progress for the copy process');
             });
         });
     });
