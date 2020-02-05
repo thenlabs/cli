@@ -1,4 +1,5 @@
 vendor/
+!tests/directory/vendor/
 .*
 !.editorconfig
 !.gitignore
