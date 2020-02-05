@@ -45,6 +45,31 @@ class InstallAssetsCommand extends ThenCommand
                     $this->copyDirectory($packageAssetsDir, $targetAssetsDir);
                 }
             }
+
+            if (isset($thenPackage->merge) && is_array($thenPackage->merge)) {
+                foreach ($thenPackage->merge as $filename) {
+                    $sourceFilename = $packageDir.'/'.$filename;
+                    $targetFilename = $directory.'/'.$thenJson->targetAssetsDir.'/'.basename($filename);
+
+                    if (file_exists($targetFilename)) {
+                        $pathInfo = pathInfo($targetFilename);
+
+                        if ($pathInfo['extension'] == 'json') {
+                            $currentContent = json_decode(file_get_contents($targetFilename), true);
+                            $newContent = json_decode(file_get_contents($sourceFilename), true);
+
+                            if (is_array($currentContent) && is_array($newContent)) {
+                                file_put_contents(
+                                    $targetFilename,
+                                    json_encode(array_merge($currentContent, $newContent))
+                                );
+                            }
+                        }
+                    } else {
+                        copy($sourceFilename, $targetFilename);
+                    }
+                }
+            }
         }
 
         return 0;
