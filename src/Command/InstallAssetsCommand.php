@@ -27,7 +27,6 @@ class InstallAssetsCommand extends ThenCommand
         }
 
         $directory = $input->getArgument('directory');
-        // $targetAssetsDir = $directory.'/'.$thenJson->targetAssetsDir;
 
         foreach ($installedPackages as $package) {
             $packageDir = "{$directory}/vendor/{$package}";

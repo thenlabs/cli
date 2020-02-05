@@ -152,10 +152,17 @@ testCase('ApplicationTest.php', function () {
                     $this->structure2 = $this->getStructure();
                 });
 
-                test('all files they are copied', function () {
+                test('all files from vendor1/package11 they are copied', function () {
                     $this->assertEquals(
                         $this->structure2[$this->rootDirName]['vendor']['vendor1']['package11']['assets'],
                         $this->structure2[$this->rootDirName]['public']['vendor1']['package11']
+                    );
+                });
+
+                test('all files from vendor2/package21 they are copied', function () {
+                    $this->assertEquals(
+                        $this->structure2[$this->rootDirName]['vendor']['vendor2']['package21']['resources'],
+                        $this->structure2[$this->rootDirName]['public']['vendor2']['package21']
                     );
                 });
 
