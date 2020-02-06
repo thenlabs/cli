@@ -54,16 +54,18 @@ class InstallAssetsCommand extends ThenCommand
                     if (file_exists($targetFilename)) {
                         $pathInfo = pathInfo($targetFilename);
 
-                        if ($pathInfo['extension'] == 'json') {
-                            $currentContent = json_decode(file_get_contents($targetFilename), true);
-                            $newContent = json_decode(file_get_contents($sourceFilename), true);
+                        switch ($pathInfo['extension']) {
+                            case 'json':
+                                $currentContent = json_decode(file_get_contents($targetFilename), true);
+                                $newContent = json_decode(file_get_contents($sourceFilename), true);
 
-                            if (is_array($currentContent) && is_array($newContent)) {
-                                file_put_contents(
-                                    $targetFilename,
-                                    json_encode(array_merge($currentContent, $newContent),  JSON_PRETTY_PRINT)
-                                );
-                            }
+                                if (is_array($currentContent) && is_array($newContent)) {
+                                    file_put_contents(
+                                        $targetFilename,
+                                        json_encode(array_merge($currentContent, $newContent),  JSON_PRETTY_PRINT)
+                                    );
+                                }
+                                break;
                         }
                     } else {
                         copy($sourceFilename, $targetFilename);
