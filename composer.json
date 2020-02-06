@@ -27,5 +27,8 @@
         "friendsofphp/php-cs-fixer": "^2.12",
         "andaniel05/pyramidaltests": "dev-master",
         "mikey179/vfsStream": "~1"
-    }
+    },
+    "bin": [
+        "then"
+    ]
 }
