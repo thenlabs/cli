@@ -61,7 +61,7 @@ class InstallAssetsCommand extends ThenCommand
                             if (is_array($currentContent) && is_array($newContent)) {
                                 file_put_contents(
                                     $targetFilename,
-                                    json_encode(array_merge($currentContent, $newContent))
+                                    json_encode(array_merge($currentContent, $newContent),  JSON_PRETTY_PRINT)
                                 );
                             }
                         }
