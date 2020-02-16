@@ -37,7 +37,7 @@ class InstallCommand extends ThenCommand
                 mkdir($targetAssetsDir, 0777, true);
             }
 
-            $thenPackage = json_decode(file_get_contents($packageDir.'/then-package.json'));
+            $thenPackage = json_decode(file_get_contents($packageDir.'/thenkit.json'));
 
             if (isset($thenPackage->assetsDir) && is_array($thenPackage->assetsDir)) {
                 foreach ($thenPackage->assetsDir as $assetsDir) {

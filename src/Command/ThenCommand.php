@@ -27,7 +27,7 @@ class ThenCommand extends Command
             $content = json_decode(file_get_contents($composerLockFile));
             if (is_object($content)) {
                 foreach ($content->packages as $package) {
-                    if ($package->type == 'then-package') {
+                    if ($package->type == 'thenkit') {
                         $installedPackages[] = $package->name;
                     }
                 }

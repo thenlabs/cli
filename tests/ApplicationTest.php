@@ -70,21 +70,21 @@ testCase('ApplicationTest.php', function () {
             }
         });
 
-        testCase('exists a composer.lock file that contains two then packages', function () {
+        testCase('exists a composer.lock file that contains two then kits', function () {
             setUp(function () {
                 $this->composerLockContent = [
                     'packages' => [
                         [
-                            'name' => uniqid('package'),
-                            'type' => 'then-package',
+                            'name' => uniqid('kit'),
+                            'type' => 'thenkit',
                         ],
                         [
                             'name' => uniqid('library'),
                             'type' => 'library',
                         ],
                         [
-                            'name' => uniqid('package'),
-                            'type' => 'then-package',
+                            'name' => uniqid('kit'),
+                            'type' => 'thenkit',
                         ],
                     ]
                 ];
@@ -95,7 +95,7 @@ testCase('ApplicationTest.php', function () {
                 $this->rootDir->addChild($this->composerLockFile);
             });
 
-            test('the command "kit:list:installed" shows the expected packages', function () {
+            test('the command "kit:list:installed" shows the expected kits', function () {
                 $this->runCommand('kit:list:installed', []);
 
                 $this->assertContains(
@@ -134,7 +134,7 @@ testCase('ApplicationTest.php', function () {
             });
         });
 
-        testCase('exists a thenlabs package', function () {
+        testCase('exists a thenlabs kit', function () {
             setUp(function () {
                 vfsStream::copyFromFileSystem(__DIR__.'/directory');
 
