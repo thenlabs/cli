@@ -1,20 +1,21 @@
 <?php
 declare(strict_types=1);
 
-namespace ThenLabs\Cli\Command;
+namespace ThenLabs\Cli\Command\Kit;
 
+use ThenLabs\Cli\Command\ThenCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class InstallAssetsCommand extends ThenCommand
+class InstallCommand extends ThenCommand
 {
-    protected static $defaultName = 'install:assets';
+    protected static $defaultName = 'kit:install';
 
     protected function configure()
     {
         parent::configure();
 
-        $this->setDescription('Install the assets files of the installed then packages');
+        $this->setDescription('Install the assets files of the installed kits');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

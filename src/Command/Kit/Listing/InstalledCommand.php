@@ -1,21 +1,22 @@
 <?php
 declare(strict_types=1);
 
-namespace ThenLabs\Cli\Command;
+namespace ThenLabs\Cli\Command\Kit\Listing;
 
+use ThenLabs\Cli\Command\ThenCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ListInstalledPackagesCommand extends ThenCommand
+class InstalledCommand extends ThenCommand
 {
-    protected static $defaultName = 'list:installed-packages';
+    protected static $defaultName = 'kit:list:installed';
 
     protected function configure()
     {
         parent::configure();
 
-        $this->setDescription('Lists all the installed packages that type is "then-package".');
+        $this->setDescription('Lists all the installed then kits.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

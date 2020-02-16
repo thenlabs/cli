@@ -15,8 +15,8 @@ setTestCaseNamespace(__NAMESPACE__);
 setTestCaseClass(TestCase::class);
 
 define('THEN_COMMANDS', [
-    'list:installed-packages',
-    'install:assets',
+    'kit:list:installed',
+    'kit:install',
 ]);
 
 testCase('ApplicationTest.php', function () {
@@ -95,8 +95,8 @@ testCase('ApplicationTest.php', function () {
                 $this->rootDir->addChild($this->composerLockFile);
             });
 
-            test('the command "list:installed-packages" shows the expected packages', function () {
-                $this->runCommand('list:installed-packages', []);
+            test('the command "kit:list:installed" shows the expected packages', function () {
+                $this->runCommand('kit:list:installed', []);
 
                 $this->assertContains(
                     $this->composerLockContent['packages'][0]['name'],
@@ -112,8 +112,8 @@ testCase('ApplicationTest.php', function () {
                 );
             });
 
-            test('the command "install:assets" shows message The "then.json" file is missing.', function () {
-                $this->runCommand('install:assets', []);
+            test('the command "kit:install" shows message The "then.json" file is missing.', function () {
+                $this->runCommand('kit:install', []);
 
                 $this->assertContains('The "then.json" file is missing.', $this->output);
             });
@@ -126,8 +126,8 @@ testCase('ApplicationTest.php', function () {
                     $this->rootDir->addChild($this->thenJsonFile);
                 });
 
-                test('the command "install:assets" shows message The "then.json" file is corrupt.', function () {
-                    $this->runCommand('install:assets', []);
+                test('the command "kit:install" shows message The "then.json" file is corrupt.', function () {
+                    $this->runCommand('kit:install', []);
 
                     $this->assertContains('The "then.json" file is corrupt.', $this->output);
                 });
@@ -145,9 +145,9 @@ testCase('ApplicationTest.php', function () {
                 return vfsStream::inspect(new vfsStreamStructureVisitor)->getStructure();
             });
 
-            testCase('runs the install:assets command', function () {
+            testCase('runs the kit:install command', function () {
                 setUp(function () {
-                    $this->runCommand('install:assets', []);
+                    $this->runCommand('kit:install', []);
 
                     $this->structure2 = $this->getStructure();
                 });
