@@ -67,12 +67,16 @@ testCase('ApplicationTest.php', function () {
                 );
             });
 
-            // test('all files from vendor2/package21 they are copied', function () {
-            //     $this->assertEquals(
-            //         $this->structure2[$this->rootDirName]['vendor']['vendor2']['package21']['resources'],
-            //         $this->structure2[$this->rootDirName]['public']['vendor2']['package21']
-            //     );
-            // });
+            test('all files from vendor2/package21 they are copied', function () {
+                $this->assertEquals(
+                    $this->tempDir['vendor']['vendor2']['package21']['resources']['file1.txt'],
+                    $this->tempDir['public']['vendor2']['package21']['file1.txt']
+                );
+                $this->assertEquals(
+                    $this->tempDir['vendor']['vendor2']['package21']['resources']['file2.txt'],
+                    $this->tempDir['public']['vendor2']['package21']['newDir']['newFile2.txt']
+                );
+            });
 
             // test('the file1.json has been created and merged successfull', function () {
             //     $expectedContent = [

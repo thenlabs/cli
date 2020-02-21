@@ -52,7 +52,8 @@ class InstallCommand extends ThenCommand
                     $matches = glob($kitDir.'/'.$key);
 
                     foreach ($matches as $filename) {
-                        $newFilename = $targetDir.'/'.basename($filename);
+                        $newFilename = $targetDir.'/';
+                        $newFilename .= $value ? $value : basename($filename);
 
                         if (is_dir($filename)) {
                             $filesystem->mirror($filename, $newFilename);
@@ -60,23 +61,6 @@ class InstallCommand extends ThenCommand
                             $filesystem->copy($filename, $newFilename);
                         }
                     }
-
-                    // $assetFullPath = $kitDir.'/'.$assetBasePath;
-
-                    // if (is_dir($assetFullPath)) {
-                    //     Helpers::copyDirectory($assetFullPath, $targetAssetsDir);
-                    // } elseif (file_exists($assetFullPath)) {
-                    //     $targetFilename = $targetAssetsDir.'/'.$assetBasePath;
-                    //     $parts = explode('/', $targetFilename);
-                    //     array_pop($parts);
-                    //     $targetDirectory = implode('/', $parts);
-
-                    //     if (! is_dir($targetDirectory)) {
-                    //         mkdir($targetDirectory, 0777, true);
-                    //     }
-
-                    //     copy($assetFullPath, $targetAssetsDir.'/'.$assetBasePath);
-                    // }
                 }
             }
 
