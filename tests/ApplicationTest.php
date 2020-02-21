@@ -76,23 +76,35 @@ testCase('ApplicationTest.php', function () {
                     $this->tempDir['vendor']['vendor2']['package21']['resources']['file2.txt'],
                     $this->tempDir['public']['vendor2']['package21']['newDir']['newFile2.txt']
                 );
+                $this->assertFalse(
+                    isset($this->tempDir['public']['vendor2']['package21']['dir'])
+                );
+                $this->assertFalse(
+                    isset($this->tempDir['public']['vendor2']['package21']['dir']['file222.txt'])
+                );
             });
 
-            // test('the file1.json has been created and merged successfull', function () {
-            //     $expectedContent = [
-            //         'data1' => 'value1',
-            //         'data2' => 'value2',
-            //         'data3' => 'value3',
-            //         'data4' => 'value4',
-            //         'data5' => 'value5',
-            //         'data6' => 'value6',
-            //     ];
+            test('the file1.json has been merged successfull', function () {
+                $expectedContent = [
+                    'dependencies' => [
+                        'dep1' => 'version1',
+                        'dep2' => 'version2',
+                        'dep3' => 'version3',
+                        'dep4' => 'version4',
+                        'dep5' => 'version5',
+                    ],
+                    'devDependencies' => [
+                        'devDep1' => 'v1',
+                        'devDep2' => 'v2',
+                        'devDep3' => 'v3',
+                        'devDep4' => 'v4',
+                    ],
+                ];
 
-            //     $this->assertEquals(
-            //         $expectedContent,
-            //         json_decode($this->structure2[$this->rootDirName]['public']['file1.json'], true)
-            //     );
-            // });
+                $current = json_decode($this->tempDir['public']['file1.json'], true);
+
+                $this->assertEquals($expectedContent, $current);
+            });
         });
 
         // tearDownAfterClass(function () {
@@ -211,56 +223,6 @@ testCase('ApplicationTest.php', function () {
                     });
                 });
             });
-
-            // testCase('exists a project', function () {
-            //     setUp(function () {
-            //         vfsStream::copyFromFileSystem(__DIR__.'/project');
-
-            //         $this->structure1 = $this->getStructure();
-            //     });
-
-            //     createMethod('getStructure', function () {
-            //         return vfsStream::inspect(new vfsStreamStructureVisitor)->getStructure();
-            //     });
-
-            //     testCase('runs the kit:install command', function () {
-            //         setUp(function () {
-            //             $this->runCommand('kit:install', []);
-
-            //             $this->structure2 = $this->getStructure();
-            //         });
-
-            //         test('all files from vendor1/package11 they are copied', function () {
-            //             $this->assertEquals(
-            //                 $this->structure2[$this->rootDirName]['vendor']['vendor1']['package11']['assets'],
-            //                 $this->structure2[$this->rootDirName]['public']['vendor1']['package11']
-            //             );
-            //         });
-
-            //         test('all files from vendor2/package21 they are copied', function () {
-            //             $this->assertEquals(
-            //                 $this->structure2[$this->rootDirName]['vendor']['vendor2']['package21']['resources'],
-            //                 $this->structure2[$this->rootDirName]['public']['vendor2']['package21']
-            //             );
-            //         });
-
-            //         test('the file1.json has been created and merged successfull', function () {
-            //             $expectedContent = [
-            //                 'data1' => 'value1',
-            //                 'data2' => 'value2',
-            //                 'data3' => 'value3',
-            //                 'data4' => 'value4',
-            //                 'data5' => 'value5',
-            //                 'data6' => 'value6',
-            //             ];
-
-            //             $this->assertEquals(
-            //                 $expectedContent,
-            //                 json_decode($this->structure2[$this->rootDirName]['public']['file1.json'], true)
-            //             );
-            //         });
-            //     });
-            // });
         });
     });
 });

@@ -30,7 +30,7 @@ class InstallCommand extends ThenCommand
         }
 
         $directory = $input->getArgument('directory');
-        $filesystem = new Filesystem();
+        $filesystem = new Filesystem;
 
         foreach ($installedKits as $kit) {
             $kitDir = "{$directory}/vendor/{$kit}";
@@ -41,11 +41,11 @@ class InstallCommand extends ThenCommand
             }
 
             $thenKit = json_decode(file_get_contents($kitDir.'/thenkit.json'));
+            if (! is_object($thenKit)) {
+                continue;
+            }
 
-            if (is_object($thenKit) &&
-                isset($thenKit->assets) &&
-                is_object($thenKit->assets)
-            ) {
+            if (isset($thenKit->assets) && is_object($thenKit->assets)) {
                 foreach ($thenKit->assets as $key => $value) {
                     $targetDir = $targetAssetsDir;
 
@@ -62,30 +62,24 @@ class InstallCommand extends ThenCommand
                 }
             }
 
-            if (isset($thenKit->merge) && is_array($thenKit->merge)) {
-                foreach ($thenKit->merge as $filename) {
-                    $sourceFilename = $kitDir.'/'.$filename;
-                    $targetFilename = $directory.'/'.$thenJson->targetAssetsDir.'/'.basename($filename);
+            if (isset($thenKit->mergeJson) && is_object($thenKit->mergeJson)) {
+                foreach ($thenKit->mergeJson as $baseFilename => $options) {
+                    $sourceFilename = $kitDir.'/'.$baseFilename;
+                    $targetFilename = $directory.'/'.$thenJson->targetAssetsDir.'/'.$options->target;
+
+                    $sourceContent = json_decode(file_get_contents($sourceFilename), true);
+                    $content = [];
+
+                    foreach ($options->keys as $key) {
+                        $content[$key] = $sourceContent[$key];
+                    }
 
                     if (file_exists($targetFilename)) {
-                        $pathInfo = pathInfo($targetFilename);
-
-                        switch ($pathInfo['extension']) {
-                            case 'json':
-                                $currentContent = json_decode(file_get_contents($targetFilename), true);
-                                $newContent = json_decode(file_get_contents($sourceFilename), true);
-
-                                if (is_array($currentContent) && is_array($newContent)) {
-                                    file_put_contents(
-                                        $targetFilename,
-                                        json_encode(array_merge($currentContent, $newContent), JSON_PRETTY_PRINT)
-                                    );
-                                }
-                                break;
-                        }
-                    } else {
-                        copy($sourceFilename, $targetFilename);
+                        $targetContent = json_decode(file_get_contents($targetFilename), true);
+                        $content = array_merge_recursive($content, $targetContent);
                     }
+
+                    file_put_contents($targetFilename, json_encode($content));
                 }
             }
         }
