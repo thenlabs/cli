@@ -70,7 +70,7 @@ testCase('ApplicationTest.php', function () {
             }
         });
 
-        testCase('exists a composer.lock file that contains two then kits', function () {
+        testCase('exists a composer.lock file that contains two thenkits', function () {
             setUp(function () {
                 $this->composerLockContent = [
                     'packages' => [
@@ -134,7 +134,7 @@ testCase('ApplicationTest.php', function () {
             });
         });
 
-        testCase('exists a thenlabs kit', function () {
+        testCase('exists a thenkit', function () {
             setUp(function () {
                 vfsStream::copyFromFileSystem(__DIR__.'/directory');
 

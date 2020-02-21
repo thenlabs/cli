@@ -1,5 +1,7 @@
 {
-    "assetsDir": ["assets"],
+    "assets": {
+        "assets/*": ""
+    },
     "merge": [
         "file1.json"
     ]

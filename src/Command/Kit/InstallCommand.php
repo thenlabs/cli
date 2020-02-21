@@ -6,6 +6,7 @@ namespace ThenLabs\Cli\Command\Kit;
 use ThenLabs\Cli\Command\ThenCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Finder\Finder;
 
 class InstallCommand extends ThenCommand
 {
@@ -39,11 +40,24 @@ class InstallCommand extends ThenCommand
 
             $thenPackage = json_decode(file_get_contents($packageDir.'/thenkit.json'));
 
-            if (isset($thenPackage->assetsDir) && is_array($thenPackage->assetsDir)) {
-                foreach ($thenPackage->assetsDir as $assetsDir) {
-                    $packageAssetsDir = $packageDir.'/'.$assetsDir;
+            if (isset($thenPackage->assets) && is_object($thenPackage->assets)) {
+                foreach ($thenPackage->assets as $assetBasePath => $assetTargetPath) {
+                    $assetFullPath = $packageDir.'/'.$assetBasePath;
 
-                    $this->copyDirectory($packageAssetsDir, $targetAssetsDir);
+                    if (is_dir($assetFullPath)) {
+                        $this->copyDirectory($assetFullPath, $targetAssetsDir);
+                    } elseif (file_exists($assetFullPath)) {
+                        $targetFilename = $targetAssetsDir.'/'.$assetBasePath;
+                        $parts = explode('/', $targetFilename);
+                        array_pop($parts);
+                        $targetDirectory = implode('/', $parts);
+
+                        if (! is_dir($targetDirectory)) {
+                            mkdir($targetDirectory, 0777, true);
+                        }
+
+                        copy($assetFullPath, $targetAssetsDir.'/'.$assetBasePath);
+                    }
                 }
             }
 
