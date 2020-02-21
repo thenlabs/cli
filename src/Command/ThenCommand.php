@@ -18,17 +18,17 @@ class ThenCommand extends Command
         $this->addArgument('directory', InputArgument::OPTIONAL, '', getcwd());
     }
 
-    protected function getInstalledPackages(InputInterface $input, OutputInterface $output): array
+    protected function getInstalledKits(InputInterface $input, OutputInterface $output): array
     {
         $composerLockFile = $input->getArgument('directory') . '/composer.lock';
-        $installedPackages = [];
+        $installedKits = [];
 
         if (file_exists($composerLockFile)) {
             $content = json_decode(file_get_contents($composerLockFile));
             if (is_object($content)) {
                 foreach ($content->packages as $package) {
                     if ($package->type == 'thenkit') {
-                        $installedPackages[] = $package->name;
+                        $installedKits[] = $package->name;
                     }
                 }
             } else {
@@ -38,7 +38,7 @@ class ThenCommand extends Command
             $output->writeln('The composer.lock file is missing.');
         }
 
-        return $installedPackages;
+        return $installedKits;
     }
 
     protected function getThenJson(InputInterface $input, OutputInterface $output)
@@ -57,21 +57,5 @@ class ThenCommand extends Command
         }
 
         return $thenJson;
-    }
-
-    protected function copyDirectory(string $src, string $dst): void
-    {
-        $dir = opendir($src);
-        @mkdir($dst);
-        while (false !== ($file = readdir($dir))) {
-            if (($file != '.') && ($file != '..')) {
-                if (is_dir($src . '/' . $file)) {
-                    $this->copyDirectory($src . '/' . $file, $dst . '/' . $file);
-                } else {
-                    copy($src . '/' . $file, $dst . '/' . $file);
-                }
-            }
-        }
-        closedir($dir);
     }
 }

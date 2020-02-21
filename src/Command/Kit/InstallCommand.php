@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ThenLabs\Cli\Command\Kit;
 
+use ThenLabs\Cli\Helpers;
 use ThenLabs\Cli\Command\ThenCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -21,7 +22,7 @@ class InstallCommand extends ThenCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $installedPackages = $this->getInstalledPackages($input, $output);
+        $installedKits = $this->getInstalledKits($input, $output);
         $thenJson = $this->getThenJson($input, $output);
 
         if (! isset($thenJson->targetAssetsDir)) {
@@ -30,22 +31,25 @@ class InstallCommand extends ThenCommand
 
         $directory = $input->getArgument('directory');
 
-        foreach ($installedPackages as $package) {
-            $packageDir = "{$directory}/vendor/{$package}";
-            $targetAssetsDir = $directory.'/'.$thenJson->targetAssetsDir.'/'.$package;
+        foreach ($installedKits as $kit) {
+            $kitDir = "{$directory}/vendor/{$kit}";
+            $targetAssetsDir = $directory.'/'.$thenJson->targetAssetsDir.'/'.$kit;
 
             if (! is_dir($targetAssetsDir)) {
                 mkdir($targetAssetsDir, 0777, true);
             }
 
-            $thenPackage = json_decode(file_get_contents($packageDir.'/thenkit.json'));
+            $thenKit = json_decode(file_get_contents($kitDir.'/thenkit.json'));
 
-            if (isset($thenPackage->assets) && is_object($thenPackage->assets)) {
-                foreach ($thenPackage->assets as $assetBasePath => $assetTargetPath) {
-                    $assetFullPath = $packageDir.'/'.$assetBasePath;
+            if (is_object($thenKit) &&
+                isset($thenKit->assets) &&
+                is_object($thenKit->assets)
+            ) {
+                foreach ($thenKit->assets as $assetBasePath => $assetTargetPath) {
+                    $assetFullPath = $kitDir.'/'.$assetBasePath;
 
                     if (is_dir($assetFullPath)) {
-                        $this->copyDirectory($assetFullPath, $targetAssetsDir);
+                        Helpers::copyDirectory($assetFullPath, $targetAssetsDir);
                     } elseif (file_exists($assetFullPath)) {
                         $targetFilename = $targetAssetsDir.'/'.$assetBasePath;
                         $parts = explode('/', $targetFilename);
@@ -61,9 +65,9 @@ class InstallCommand extends ThenCommand
                 }
             }
 
-            if (isset($thenPackage->merge) && is_array($thenPackage->merge)) {
-                foreach ($thenPackage->merge as $filename) {
-                    $sourceFilename = $packageDir.'/'.$filename;
+            if (isset($thenKit->merge) && is_array($thenKit->merge)) {
+                foreach ($thenKit->merge as $filename) {
+                    $sourceFilename = $kitDir.'/'.$filename;
                     $targetFilename = $directory.'/'.$thenJson->targetAssetsDir.'/'.basename($filename);
 
                     if (file_exists($targetFilename)) {

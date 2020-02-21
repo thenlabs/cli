@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace ThenLabs\Cli\Command\Kit\Listing;
+namespace ThenLabs\Cli\Command\Kit\List_;
 
 use ThenLabs\Cli\Command\ThenCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,8 +21,8 @@ class InstalledCommand extends ThenCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        foreach ($this->getInstalledPackages($input, $output) as $package) {
-            $output->writeln($package);
+        foreach ($this->getInstalledKits($input, $output) as $kit) {
+            $output->writeln($kit);
         }
 
         return 0;

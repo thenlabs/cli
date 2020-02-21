@@ -15,6 +15,6 @@ class Application extends SymfonyConsoleApplication
         parent::__construct();
 
         $this->add(new Command\Kit\InstallCommand);
-        $this->add(new Command\Kit\Listing\InstalledCommand);
+        $this->add(new Command\Kit\List_\InstalledCommand);
     }
 }

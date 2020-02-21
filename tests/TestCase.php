@@ -13,6 +13,11 @@ class TestCase extends BaseTestCase
 {
     use StaticVarsInjectionTrait;
 
+    public function setUp()
+    {
+        $this->injectVars();
+    }
+
     public static function readDirectoryInArray(string $directory): array
     {
         $result = [];

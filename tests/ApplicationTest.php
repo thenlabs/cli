@@ -3,6 +3,7 @@
 namespace ThenLabs\Cli\Tests;
 
 use ThenLabs\Cli\Application;
+use ThenLabs\Cli\Helpers;
 use Symfony\Component\Console\Tester\CommandTester;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamWrapper;
@@ -32,12 +33,12 @@ testCase('ApplicationTest.php', function () {
 
         createStaticMethod('createTempDir', function () {
             static::removeTempDir();
-            copy(PROJECT_DIR, TEMP_DIR);
+            Helpers::copyDirectory(PROJECT_DIR, TEMP_DIR);
         });
 
         createStaticMethod('removeTempDir', function () {
             if (is_dir(TEMP_DIR)) {
-                rmdir(TEMP_DIR);
+                Helpers::removeDirectory(TEMP_DIR);
             }
         });
 
@@ -51,12 +52,16 @@ testCase('ApplicationTest.php', function () {
                 $commandTester->execute($arguments);
 
                 $output = $commandTester->getDisplay();
+                $tempDir = static::readDirectoryInArray(TEMP_DIR);
 
-                static::setVar('output', $output);
+                static::addVars(compact('output', 'tempDir'));
             });
 
             test('all files from vendor1/package11 they are copied', function () {
-                print_r(static::readDirectoryInArray(PROJECT_DIR));
+                $this->assertEquals(
+                    $this->tempDir['vendor']['vendor1']['package11']['assets'],
+                    $this->tempDir['public']['vendor1']['package11']
+                );
             });
 
             // test('all files from vendor2/package21 they are copied', function () {
