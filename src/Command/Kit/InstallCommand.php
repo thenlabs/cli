@@ -49,9 +49,7 @@ class InstallCommand extends ThenCommand
                 foreach ($thenKit->assets as $key => $value) {
                     $targetDir = $targetAssetsDir;
 
-                    $matches = glob($kitDir.'/'.$key);
-
-                    foreach ($matches as $filename) {
+                    foreach (glob($kitDir.'/'.$key) as $filename) {
                         $newFilename = $targetDir.'/';
                         $newFilename .= $value ? $value : basename($filename);
 
