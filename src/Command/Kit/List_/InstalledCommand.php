@@ -5,7 +5,6 @@ namespace ThenLabs\Cli\Command\Kit\List_;
 
 use ThenLabs\Cli\Command\ThenCommand;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class InstalledCommand extends ThenCommand

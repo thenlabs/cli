@@ -3,8 +3,8 @@
 namespace ThenLabs\Cli\Tests;
 
 use ThenLabs\Cli\Application;
-use ThenLabs\Cli\Helpers;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Filesystem\Filesystem;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamWrapper;
 use org\bovigo\vfs\vfsStreamDirectory;
@@ -33,12 +33,15 @@ testCase('ApplicationTest.php', function () {
 
         createStaticMethod('createTempDir', function () {
             static::removeTempDir();
-            Helpers::copyDirectory(PROJECT_DIR, TEMP_DIR);
+
+            $filesystem = new Filesystem();
+            $filesystem->mirror(PROJECT_DIR, TEMP_DIR);
         });
 
         createStaticMethod('removeTempDir', function () {
             if (is_dir(TEMP_DIR)) {
-                Helpers::removeDirectory(TEMP_DIR);
+                $filesystem = new Filesystem();
+                $filesystem->remove(TEMP_DIR);
             }
         });
 
@@ -46,7 +49,7 @@ testCase('ApplicationTest.php', function () {
             setUpBeforeClass(function () {
                 $application = static::getVar('application');
                 $command = $application->find('kit:install');
-                $arguments = ['directory' => PROJECT_DIR];
+                $arguments = ['directory' => TEMP_DIR];
 
                 $commandTester = new CommandTester($command);
                 $commandTester->execute($arguments);
@@ -88,9 +91,9 @@ testCase('ApplicationTest.php', function () {
             // });
         });
 
-        tearDownAfterClass(function () {
-            static::removeTempDir();
-        });
+        // tearDownAfterClass(function () {
+        //     static::removeTempDir();
+        // });
     });
 
     testCase('using a virtual file system', function () {

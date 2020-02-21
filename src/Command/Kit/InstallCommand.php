@@ -7,7 +7,7 @@ use ThenLabs\Cli\Helpers;
 use ThenLabs\Cli\Command\ThenCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Finder\Finder;
+use Symfony\Component\Filesystem\Filesystem;
 
 class InstallCommand extends ThenCommand
 {
@@ -30,6 +30,7 @@ class InstallCommand extends ThenCommand
         }
 
         $directory = $input->getArgument('directory');
+        $filesystem = new Filesystem();
 
         foreach ($installedKits as $kit) {
             $kitDir = "{$directory}/vendor/{$kit}";
@@ -45,23 +46,37 @@ class InstallCommand extends ThenCommand
                 isset($thenKit->assets) &&
                 is_object($thenKit->assets)
             ) {
-                foreach ($thenKit->assets as $assetBasePath => $assetTargetPath) {
-                    $assetFullPath = $kitDir.'/'.$assetBasePath;
+                foreach ($thenKit->assets as $key => $value) {
+                    $targetDir = $targetAssetsDir;
 
-                    if (is_dir($assetFullPath)) {
-                        Helpers::copyDirectory($assetFullPath, $targetAssetsDir);
-                    } elseif (file_exists($assetFullPath)) {
-                        $targetFilename = $targetAssetsDir.'/'.$assetBasePath;
-                        $parts = explode('/', $targetFilename);
-                        array_pop($parts);
-                        $targetDirectory = implode('/', $parts);
+                    $matches = glob($kitDir.'/'.$key);
 
-                        if (! is_dir($targetDirectory)) {
-                            mkdir($targetDirectory, 0777, true);
+                    foreach ($matches as $filename) {
+                        $newFilename = $targetDir.'/'.basename($filename);
+
+                        if (is_dir($filename)) {
+                            $filesystem->mirror($filename, $newFilename);
+                        } elseif (is_file($filename)) {
+                            $filesystem->copy($filename, $newFilename);
                         }
-
-                        copy($assetFullPath, $targetAssetsDir.'/'.$assetBasePath);
                     }
+
+                    // $assetFullPath = $kitDir.'/'.$assetBasePath;
+
+                    // if (is_dir($assetFullPath)) {
+                    //     Helpers::copyDirectory($assetFullPath, $targetAssetsDir);
+                    // } elseif (file_exists($assetFullPath)) {
+                    //     $targetFilename = $targetAssetsDir.'/'.$assetBasePath;
+                    //     $parts = explode('/', $targetFilename);
+                    //     array_pop($parts);
+                    //     $targetDirectory = implode('/', $parts);
+
+                    //     if (! is_dir($targetDirectory)) {
+                    //         mkdir($targetDirectory, 0777, true);
+                    //     }
+
+                    //     copy($assetFullPath, $targetAssetsDir.'/'.$assetBasePath);
+                    // }
                 }
             }
 
@@ -81,7 +96,7 @@ class InstallCommand extends ThenCommand
                                 if (is_array($currentContent) && is_array($newContent)) {
                                     file_put_contents(
                                         $targetFilename,
-                                        json_encode(array_merge($currentContent, $newContent),  JSON_PRETTY_PRINT)
+                                        json_encode(array_merge($currentContent, $newContent), JSON_PRETTY_PRINT)
                                     );
                                 }
                                 break;
