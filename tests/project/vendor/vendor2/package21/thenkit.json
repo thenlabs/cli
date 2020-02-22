@@ -1,0 +1,10 @@
+{
+    "assets": {
+        "resources/file1.txt": "file1.txt",
+        "resources/file2.txt": "newDir/newFile2.txt"
+    },
+    "merge": [
+        "file1.json",
+        "file2.json"
+    ]
+}
