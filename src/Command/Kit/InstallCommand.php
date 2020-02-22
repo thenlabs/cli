@@ -24,8 +24,10 @@ class InstallCommand extends ThenCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $installedKits = $this->getInstalledKits($input, $output);
-        $thenJson = $this->getThenJson($input, $output);
+        $directory = $input->getArgument('directory');
+
+        $installedKits = $this->getInstalledKits($directory, $output);
+        $thenJson = $this->getThenJson($directory, $output);
 
         if (! isset($thenJson->targetAssetsDir)) {
             return 0;

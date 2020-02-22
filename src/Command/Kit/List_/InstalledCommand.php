@@ -20,7 +20,9 @@ class InstalledCommand extends ThenCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        foreach ($this->getInstalledKits($input, $output) as $kit) {
+        $directory = $input->getArgument('directory');
+
+        foreach ($this->getInstalledKits($directory, $output) as $kit) {
             $output->writeln($kit);
         }
 

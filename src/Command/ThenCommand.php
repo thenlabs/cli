@@ -18,9 +18,9 @@ class ThenCommand extends Command
         $this->addArgument('directory', InputArgument::OPTIONAL, '', getcwd());
     }
 
-    protected function getInstalledKits(InputInterface $input, OutputInterface $output): array
+    protected function getInstalledKits(string $directory, OutputInterface $output): array
     {
-        $composerLockFile = $input->getArgument('directory') . '/composer.lock';
+        $composerLockFile = $directory.'/composer.lock';
         $installedKits = [];
 
         if (file_exists($composerLockFile)) {
@@ -41,9 +41,9 @@ class ThenCommand extends Command
         return $installedKits;
     }
 
-    protected function getThenJson(InputInterface $input, OutputInterface $output)
+    protected function getThenJson(string $directory, OutputInterface $output)
     {
-        $thenJsonFile = $input->getArgument('directory') . '/then.json';
+        $thenJsonFile = $directory.'/then.json';
 
         if (! file_exists($thenJsonFile)) {
             $output->writeln('The "then.json" file is missing.');
