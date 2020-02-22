@@ -5,6 +5,7 @@ namespace ThenLabs\Cli\Command\Kit;
 
 use ThenLabs\Cli\Command\ThenCommand;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -17,6 +18,8 @@ class InstallCommand extends ThenCommand
         parent::configure();
 
         $this->setDescription('Install the assets files of the installed kits');
+
+        $this->addArgument('thenkit-file', InputArgument::OPTIONAL, '');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

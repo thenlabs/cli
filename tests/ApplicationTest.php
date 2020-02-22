@@ -20,6 +20,8 @@ define('THEN_COMMANDS', [
 
 define('PROJECT_DIR', __DIR__.'/project');
 define('TEMP_DIR', __DIR__.'/temp');
+define('PROJECT_DIR2', __DIR__.'/thenkit-project');
+define('TEMP_DIR2', __DIR__.'/temp2');
 
 testCase('ApplicationTest.php', function () {
     testCase('using the real file system', function () {
@@ -35,12 +37,17 @@ testCase('ApplicationTest.php', function () {
 
             $filesystem = new Filesystem();
             $filesystem->mirror(PROJECT_DIR, TEMP_DIR);
+            $filesystem->mirror(PROJECT_DIR2, TEMP_DIR2);
         });
 
         createStaticMethod('removeTempDir', function () {
             if (is_dir(TEMP_DIR)) {
                 $filesystem = new Filesystem();
                 $filesystem->remove(TEMP_DIR);
+            }
+            if (is_dir(TEMP_DIR2)) {
+                $filesystem = new Filesystem();
+                $filesystem->remove(TEMP_DIR2);
             }
         });
 
@@ -104,6 +111,71 @@ testCase('ApplicationTest.php', function () {
 
                 $this->assertEquals($expectedContent, $current);
             });
+        });
+
+        testCase('runs the kit:install command specifying the argument "thenkit-file"', function () {
+            setUpBeforeClass(function () {
+                $application = static::getVar('application');
+                $command = $application->find('kit:install');
+                $arguments = [
+                    'directory' => TEMP_DIR2.'/examples',
+                    'thenkit-file' => TEMP_DIR2.'/thenkit.json',
+                ];
+
+                $commandTester = new CommandTester($command);
+                $commandTester->execute($arguments);
+
+                $output = $commandTester->getDisplay();
+                $tempDir = static::readDirectoryInArray(TEMP_DIR2);
+
+                static::addVars(compact('output', 'tempDir'));
+            });
+
+            test('all files from assets folder they are copied into examples/public', function () {
+                $this->assertEquals(
+                    $this->tempDir['assets'],
+                    $this->tempDir['examples']['public']['vendorname']['kitname']
+                );
+            });
+
+            // test('all files from vendor2/package21 they are copied', function () {
+            //     $this->assertEquals(
+            //         $this->tempDir['vendor']['vendor2']['package21']['resources']['file1.txt'],
+            //         $this->tempDir['public']['vendor2']['package21']['file1.txt']
+            //     );
+            //     $this->assertEquals(
+            //         $this->tempDir['vendor']['vendor2']['package21']['resources']['file2.txt'],
+            //         $this->tempDir['public']['vendor2']['package21']['newDir']['newFile2.txt']
+            //     );
+            //     $this->assertFalse(
+            //         isset($this->tempDir['public']['vendor2']['package21']['dir'])
+            //     );
+            //     $this->assertFalse(
+            //         isset($this->tempDir['public']['vendor2']['package21']['dir']['file222.txt'])
+            //     );
+            // });
+
+            // test('the file1.json has been merged successfull', function () {
+            //     $expectedContent = [
+            //         'dependencies' => [
+            //             'dep1' => 'version1',
+            //             'dep2' => 'version2',
+            //             'dep3' => 'version3',
+            //             'dep4' => 'version4',
+            //             'dep5' => 'version5',
+            //         ],
+            //         'devDependencies' => [
+            //             'devDep1' => 'v1',
+            //             'devDep2' => 'v2',
+            //             'devDep3' => 'v3',
+            //             'devDep4' => 'v4',
+            //         ],
+            //     ];
+
+            //     $current = json_decode($this->tempDir['public']['file1.json'], true);
+
+            //     $this->assertEquals($expectedContent, $current);
+            // });
         });
 
         // tearDownAfterClass(function () {
