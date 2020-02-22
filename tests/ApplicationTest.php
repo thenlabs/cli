@@ -189,14 +189,6 @@ testCase('ApplicationTest.php', function () {
                 $this->output = $commandTester->getDisplay();
             });
 
-            foreach (THEN_COMMANDS as $command) {
-                test("the commmand '{$command}' shows error message when the composer.lock file is missing", function () use ($command) {
-                    $this->runCommand($command, []);
-
-                    $this->assertContains('The composer.lock file is missing.', $this->output);
-                });
-            }
-
             testCase('exists an invalid composer.lock file', function () {
                 setUp(function () {
                     $this->composerLockFile = new vfsStreamFile('composer.lock');

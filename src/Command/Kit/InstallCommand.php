@@ -97,7 +97,9 @@ class InstallCommand extends ThenCommand
                 $content = [];
 
                 foreach ($options->keys as $key) {
-                    $content[$key] = $sourceContent[$key];
+                    if (isset($sourceContent[$key])) {
+                        $content[$key] = $sourceContent[$key];
+                    }
                 }
 
                 if (file_exists($targetFilename)) {
@@ -105,7 +107,7 @@ class InstallCommand extends ThenCommand
                     $content = array_merge_recursive($content, $targetContent);
                 }
 
-                file_put_contents($targetFilename, json_encode($content));
+                file_put_contents($targetFilename, json_encode($content, JSON_PRETTY_PRINT));
             }
         }
     }

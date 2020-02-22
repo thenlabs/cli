@@ -34,8 +34,6 @@ class ThenCommand extends Command
             } else {
                 $output->writeln('The composer.lock file is corrupt.');
             }
-        } else {
-            $output->writeln('The composer.lock file is missing.');
         }
 
         return $installedKits;
