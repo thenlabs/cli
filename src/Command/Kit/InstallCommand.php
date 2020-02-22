@@ -25,27 +25,42 @@ class InstallCommand extends ThenCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $directory = $input->getArgument('directory');
+        $installedKits = $this->getInstalledKits($directory, $output);
         $thenkitFile = $input->getArgument('thenkit-file');
 
-        $installedKits = $this->getInstalledKits($directory, $output);
         $thenJson = $this->getThenJson($directory, $output);
-
         if (! isset($thenJson->targetAssetsDir)) {
             return 0;
         }
 
-        foreach ($installedKits as $kit) {
-            $this->installKit($directory, $thenJson, $kit);
+        if ($thenkitFile) {
+            if (! file_exists($thenkitFile)) {
+                $output->writeln('The specified "thenkit" file not exists.');
+                return 0;
+            }
+
+            $path = pathinfo($thenkitFile);
+            $thenKitDir = $path['dirname'];
+            $composerJsonFile = $thenKitDir.'/composer.json';
+            $composerJson = json_decode(file_get_contents($composerJsonFile));
+
+            $this->installKit($directory, $thenJson, $thenKitDir, $composerJson->name);
+
+            return 0;
+        }
+
+        foreach ($installedKits as $kitName) {
+            $kitDir = "{$directory}/vendor/{$kitName}";
+            $this->installKit($directory, $thenJson, $kitDir, $kitName);
         }
 
         return 0;
     }
 
-    private function installKit(string $directory, object $thenJson, string $kit): void
+    private function installKit(string $directory, object $thenJson, string $kitDir, string $kitName): void
     {
         $filesystem = new Filesystem;
-        $kitDir = "{$directory}/vendor/{$kit}";
-        $targetAssetsDir = $directory.'/'.$thenJson->targetAssetsDir.'/'.$kit;
+        $targetAssetsDir = $directory.'/'.$thenJson->targetAssetsDir.'/'.$kitName;
 
         if (! is_dir($targetAssetsDir)) {
             mkdir($targetAssetsDir, 0777, true);
