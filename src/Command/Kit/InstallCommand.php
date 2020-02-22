@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace ThenLabs\Cli\Command\Kit;
 
-use ThenLabs\Cli\Helpers;
 use ThenLabs\Cli\Command\ThenCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
