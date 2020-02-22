@@ -25,6 +25,7 @@ class InstallCommand extends ThenCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $directory = $input->getArgument('directory');
+        $thenkitFile = $input->getArgument('thenkit-file');
 
         $installedKits = $this->getInstalledKits($directory, $output);
         $thenJson = $this->getThenJson($directory, $output);
@@ -33,61 +34,64 @@ class InstallCommand extends ThenCommand
             return 0;
         }
 
-        $directory = $input->getArgument('directory');
-        $filesystem = new Filesystem;
-
         foreach ($installedKits as $kit) {
-            $kitDir = "{$directory}/vendor/{$kit}";
-            $targetAssetsDir = $directory.'/'.$thenJson->targetAssetsDir.'/'.$kit;
+            $this->installKit($directory, $thenJson, $kit);
+        }
 
-            if (! is_dir($targetAssetsDir)) {
-                mkdir($targetAssetsDir, 0777, true);
-            }
+        return 0;
+    }
 
-            $thenKit = json_decode(file_get_contents($kitDir.'/thenkit.json'));
-            if (! is_object($thenKit)) {
-                continue;
-            }
+    private function installKit(string $directory, object $thenJson, string $kit): void
+    {
+        $filesystem = new Filesystem;
+        $kitDir = "{$directory}/vendor/{$kit}";
+        $targetAssetsDir = $directory.'/'.$thenJson->targetAssetsDir.'/'.$kit;
 
-            if (isset($thenKit->assets) && is_object($thenKit->assets)) {
-                foreach ($thenKit->assets as $key => $value) {
-                    $targetDir = $targetAssetsDir;
+        if (! is_dir($targetAssetsDir)) {
+            mkdir($targetAssetsDir, 0777, true);
+        }
 
-                    foreach (glob($kitDir.'/'.$key) as $filename) {
-                        $newFilename = $targetDir.'/';
-                        $newFilename .= $value ? $value : basename($filename);
+        $thenKit = json_decode(file_get_contents($kitDir.'/thenkit.json'));
+        if (! is_object($thenKit)) {
+            return;
+        }
 
-                        if (is_dir($filename)) {
-                            $filesystem->mirror($filename, $newFilename);
-                        } elseif (is_file($filename)) {
-                            $filesystem->copy($filename, $newFilename);
-                        }
+        if (isset($thenKit->assets) && is_object($thenKit->assets)) {
+            foreach ($thenKit->assets as $key => $value) {
+                $targetDir = $targetAssetsDir;
+
+                foreach (glob($kitDir.'/'.$key) as $filename) {
+                    $newFilename = $targetDir.'/';
+                    $newFilename .= $value ? $value : basename($filename);
+
+                    if (is_dir($filename)) {
+                        $filesystem->mirror($filename, $newFilename);
+                    } elseif (is_file($filename)) {
+                        $filesystem->copy($filename, $newFilename);
                     }
-                }
-            }
-
-            if (isset($thenKit->mergeJson) && is_object($thenKit->mergeJson)) {
-                foreach ($thenKit->mergeJson as $baseFilename => $options) {
-                    $sourceFilename = $kitDir.'/'.$baseFilename;
-                    $targetFilename = $directory.'/'.$thenJson->targetAssetsDir.'/'.$options->target;
-
-                    $sourceContent = json_decode(file_get_contents($sourceFilename), true);
-                    $content = [];
-
-                    foreach ($options->keys as $key) {
-                        $content[$key] = $sourceContent[$key];
-                    }
-
-                    if (file_exists($targetFilename)) {
-                        $targetContent = json_decode(file_get_contents($targetFilename), true);
-                        $content = array_merge_recursive($content, $targetContent);
-                    }
-
-                    file_put_contents($targetFilename, json_encode($content));
                 }
             }
         }
 
-        return 0;
+        if (isset($thenKit->mergeJson) && is_object($thenKit->mergeJson)) {
+            foreach ($thenKit->mergeJson as $baseFilename => $options) {
+                $sourceFilename = $kitDir.'/'.$baseFilename;
+                $targetFilename = $directory.'/'.$thenJson->targetAssetsDir.'/'.$options->target;
+
+                $sourceContent = json_decode(file_get_contents($sourceFilename), true);
+                $content = [];
+
+                foreach ($options->keys as $key) {
+                    $content[$key] = $sourceContent[$key];
+                }
+
+                if (file_exists($targetFilename)) {
+                    $targetContent = json_decode(file_get_contents($targetFilename), true);
+                    $content = array_merge_recursive($content, $targetContent);
+                }
+
+                file_put_contents($targetFilename, json_encode($content));
+            }
+        }
     }
 }
