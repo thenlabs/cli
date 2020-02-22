@@ -1,0 +1,15 @@
+{
+    "data1": "value1",
+    "data2": "value2",
+    "data3": "value3",
+    "dependencies": {
+        "dep1": "version1",
+        "dep2": "version2",
+        "dep3": "version3"
+    },
+    "devDependencies": {
+        "devDep1": "v1",
+        "devDep2": "v2",
+        "devDep3": "v3"
+    }
+}

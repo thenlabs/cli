@@ -138,49 +138,32 @@ testCase('ApplicationTest.php', function () {
                 );
             });
 
-            // test('all files from vendor2/package21 they are copied', function () {
-            //     $this->assertEquals(
-            //         $this->tempDir['vendor']['vendor2']['package21']['resources']['file1.txt'],
-            //         $this->tempDir['public']['vendor2']['package21']['file1.txt']
-            //     );
-            //     $this->assertEquals(
-            //         $this->tempDir['vendor']['vendor2']['package21']['resources']['file2.txt'],
-            //         $this->tempDir['public']['vendor2']['package21']['newDir']['newFile2.txt']
-            //     );
-            //     $this->assertFalse(
-            //         isset($this->tempDir['public']['vendor2']['package21']['dir'])
-            //     );
-            //     $this->assertFalse(
-            //         isset($this->tempDir['public']['vendor2']['package21']['dir']['file222.txt'])
-            //     );
-            // });
+            test('the file1.json has been merged successfull', function () {
+                $expectedContent = [
+                    'dependencies' => [
+                        'dep1' => 'version1',
+                        'dep2' => 'version2',
+                        'dep3' => 'version3',
+                        'dep4' => 'version4',
+                        'dep5' => 'version5',
+                    ],
+                    'devDependencies' => [
+                        'devDep1' => 'v1',
+                        'devDep2' => 'v2',
+                        'devDep3' => 'v3',
+                        'devDep4' => 'v4',
+                    ],
+                ];
 
-            // test('the file1.json has been merged successfull', function () {
-            //     $expectedContent = [
-            //         'dependencies' => [
-            //             'dep1' => 'version1',
-            //             'dep2' => 'version2',
-            //             'dep3' => 'version3',
-            //             'dep4' => 'version4',
-            //             'dep5' => 'version5',
-            //         ],
-            //         'devDependencies' => [
-            //             'devDep1' => 'v1',
-            //             'devDep2' => 'v2',
-            //             'devDep3' => 'v3',
-            //             'devDep4' => 'v4',
-            //         ],
-            //     ];
+                $current = json_decode($this->tempDir['examples']['public']['file1.json'], true);
 
-            //     $current = json_decode($this->tempDir['public']['file1.json'], true);
-
-            //     $this->assertEquals($expectedContent, $current);
-            // });
+                $this->assertEquals($expectedContent, $current);
+            });
         });
 
-        // tearDownAfterClass(function () {
-        //     static::removeTempDir();
-        // });
+        tearDownAfterClass(function () {
+            static::removeTempDir();
+        });
     });
 
     testCase('using a virtual file system', function () {
