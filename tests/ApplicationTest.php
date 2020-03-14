@@ -24,147 +24,147 @@ define('PROJECT_DIR2', __DIR__.'/thenkit-project');
 define('TEMP_DIR2', __DIR__.'/temp2');
 
 testCase('ApplicationTest.php', function () {
-    testCase('using the real file system', function () {
-        setUpBeforeClass(function () {
-            static::createTempDir();
+    // testCase('using the real file system', function () {
+    //     setUpBeforeClass(function () {
+    //         static::createTempDir();
 
-            $application = new Application;
-            static::setVar('application', $application);
-        });
+    //         $application = new Application;
+    //         static::setVar('application', $application);
+    //     });
 
-        createStaticMethod('createTempDir', function () {
-            static::removeTempDir();
+    //     createStaticMethod('createTempDir', function () {
+    //         static::removeTempDir();
 
-            $filesystem = new Filesystem();
-            $filesystem->mirror(PROJECT_DIR, TEMP_DIR);
-            $filesystem->mirror(PROJECT_DIR2, TEMP_DIR2);
-        });
+    //         $filesystem = new Filesystem();
+    //         $filesystem->mirror(PROJECT_DIR, TEMP_DIR);
+    //         $filesystem->mirror(PROJECT_DIR2, TEMP_DIR2);
+    //     });
 
-        createStaticMethod('removeTempDir', function () {
-            if (is_dir(TEMP_DIR)) {
-                $filesystem = new Filesystem();
-                $filesystem->remove(TEMP_DIR);
-            }
-            if (is_dir(TEMP_DIR2)) {
-                $filesystem = new Filesystem();
-                $filesystem->remove(TEMP_DIR2);
-            }
-        });
+    //     createStaticMethod('removeTempDir', function () {
+    //         if (is_dir(TEMP_DIR)) {
+    //             $filesystem = new Filesystem();
+    //             $filesystem->remove(TEMP_DIR);
+    //         }
+    //         if (is_dir(TEMP_DIR2)) {
+    //             $filesystem = new Filesystem();
+    //             $filesystem->remove(TEMP_DIR2);
+    //         }
+    //     });
 
-        testCase('runs the kit:install command', function () {
-            setUpBeforeClass(function () {
-                $application = static::getVar('application');
-                $command = $application->find('kit:install');
-                $arguments = ['directory' => TEMP_DIR];
+    //     testCase('runs the kit:install command', function () {
+    //         setUpBeforeClass(function () {
+    //             $application = static::getVar('application');
+    //             $command = $application->find('kit:install');
+    //             $arguments = ['directory' => TEMP_DIR];
 
-                $commandTester = new CommandTester($command);
-                $commandTester->execute($arguments);
+    //             $commandTester = new CommandTester($command);
+    //             $commandTester->execute($arguments);
 
-                $output = $commandTester->getDisplay();
-                $tempDir = static::readDirectoryInArray(TEMP_DIR);
+    //             $output = $commandTester->getDisplay();
+    //             $tempDir = static::readDirectoryInArray(TEMP_DIR);
 
-                static::addVars(compact('output', 'tempDir'));
-            });
+    //             static::addVars(compact('output', 'tempDir'));
+    //         });
 
-            test('all files from vendor1/package11 they are copied', function () {
-                $this->assertEquals(
-                    $this->tempDir['vendor']['vendor1']['package11']['assets'],
-                    $this->tempDir['public']['vendor1']['package11']
-                );
-            });
+    //         test('all files from vendor1/package11 they are copied', function () {
+    //             $this->assertEquals(
+    //                 $this->tempDir['vendor']['vendor1']['package11']['assets'],
+    //                 $this->tempDir['public']['vendor1']['package11']
+    //             );
+    //         });
 
-            test('all files from vendor2/package21 they are copied', function () {
-                $this->assertEquals(
-                    $this->tempDir['vendor']['vendor2']['package21']['resources']['file1.txt'],
-                    $this->tempDir['public']['vendor2']['package21']['file1.txt']
-                );
-                $this->assertEquals(
-                    $this->tempDir['vendor']['vendor2']['package21']['resources']['file2.txt'],
-                    $this->tempDir['public']['vendor2']['package21']['newDir']['newFile2.txt']
-                );
-                $this->assertFalse(
-                    isset($this->tempDir['public']['vendor2']['package21']['dir'])
-                );
-                $this->assertFalse(
-                    isset($this->tempDir['public']['vendor2']['package21']['dir']['file222.txt'])
-                );
-            });
+    //         test('all files from vendor2/package21 they are copied', function () {
+    //             $this->assertEquals(
+    //                 $this->tempDir['vendor']['vendor2']['package21']['resources']['file1.txt'],
+    //                 $this->tempDir['public']['vendor2']['package21']['file1.txt']
+    //             );
+    //             $this->assertEquals(
+    //                 $this->tempDir['vendor']['vendor2']['package21']['resources']['file2.txt'],
+    //                 $this->tempDir['public']['vendor2']['package21']['newDir']['newFile2.txt']
+    //             );
+    //             $this->assertFalse(
+    //                 isset($this->tempDir['public']['vendor2']['package21']['dir'])
+    //             );
+    //             $this->assertFalse(
+    //                 isset($this->tempDir['public']['vendor2']['package21']['dir']['file222.txt'])
+    //             );
+    //         });
 
-            test('the file1.json has been merged successfull', function () {
-                $expectedContent = [
-                    'dependencies' => [
-                        'dep1' => 'version1',
-                        'dep2' => 'version2',
-                        'dep3' => 'version3',
-                        'dep4' => 'version4',
-                        'dep5' => 'version5',
-                    ],
-                    'devDependencies' => [
-                        'devDep1' => 'v1',
-                        'devDep2' => 'v2',
-                        'devDep3' => 'v3',
-                        'devDep4' => 'v4',
-                    ],
-                ];
+    //         test('the file1.json has been merged successfull', function () {
+    //             $expectedContent = [
+    //                 'dependencies' => [
+    //                     'dep1' => 'version1',
+    //                     'dep2' => 'version2',
+    //                     'dep3' => 'version3',
+    //                     'dep4' => 'version4',
+    //                     'dep5' => 'version5',
+    //                 ],
+    //                 'devDependencies' => [
+    //                     'devDep1' => 'v1',
+    //                     'devDep2' => 'v2',
+    //                     'devDep3' => 'v3',
+    //                     'devDep4' => 'v4',
+    //                 ],
+    //             ];
 
-                $current = json_decode($this->tempDir['public']['file1.json'], true);
+    //             $current = json_decode($this->tempDir['public']['file1.json'], true);
 
-                $this->assertEquals($expectedContent, $current);
-            });
-        });
+    //             $this->assertEquals($expectedContent, $current);
+    //         });
+    //     });
 
-        testCase('runs the kit:install command specifying the argument "thenkit-file"', function () {
-            setUpBeforeClass(function () {
-                $application = static::getVar('application');
-                $command = $application->find('kit:install');
-                $arguments = [
-                    'directory' => TEMP_DIR2.'/examples',
-                    'thenkit-file' => TEMP_DIR2.'/thenkit.json',
-                ];
+    //     testCase('runs the kit:install command specifying the argument "thenkit-file"', function () {
+    //         setUpBeforeClass(function () {
+    //             $application = static::getVar('application');
+    //             $command = $application->find('kit:install');
+    //             $arguments = [
+    //                 'directory' => TEMP_DIR2.'/examples',
+    //                 'thenkit-file' => TEMP_DIR2.'/thenkit.json',
+    //             ];
 
-                $commandTester = new CommandTester($command);
-                $commandTester->execute($arguments);
+    //             $commandTester = new CommandTester($command);
+    //             $commandTester->execute($arguments);
 
-                $output = $commandTester->getDisplay();
-                $tempDir = static::readDirectoryInArray(TEMP_DIR2);
+    //             $output = $commandTester->getDisplay();
+    //             $tempDir = static::readDirectoryInArray(TEMP_DIR2);
 
-                static::addVars(compact('output', 'tempDir'));
-            });
+    //             static::addVars(compact('output', 'tempDir'));
+    //         });
 
-            test('all files from assets folder they are copied into examples/public', function () {
-                $this->assertEquals(
-                    $this->tempDir['assets'],
-                    $this->tempDir['examples']['public']['vendorname']['kitname']
-                );
-            });
+    //         test('all files from assets folder they are copied into examples/public', function () {
+    //             $this->assertEquals(
+    //                 $this->tempDir['assets'],
+    //                 $this->tempDir['examples']['public']['vendorname']['kitname']
+    //             );
+    //         });
 
-            test('the file1.json has been merged successfull', function () {
-                $expectedContent = [
-                    'dependencies' => [
-                        'dep1' => 'version1',
-                        'dep2' => 'version2',
-                        'dep3' => 'version3',
-                        'dep4' => 'version4',
-                        'dep5' => 'version5',
-                    ],
-                    'devDependencies' => [
-                        'devDep1' => 'v1',
-                        'devDep2' => 'v2',
-                        'devDep3' => 'v3',
-                        'devDep4' => 'v4',
-                    ],
-                ];
+    //         test('the file1.json has been merged successfull', function () {
+    //             $expectedContent = [
+    //                 'dependencies' => [
+    //                     'dep1' => 'version1',
+    //                     'dep2' => 'version2',
+    //                     'dep3' => 'version3',
+    //                     'dep4' => 'version4',
+    //                     'dep5' => 'version5',
+    //                 ],
+    //                 'devDependencies' => [
+    //                     'devDep1' => 'v1',
+    //                     'devDep2' => 'v2',
+    //                     'devDep3' => 'v3',
+    //                     'devDep4' => 'v4',
+    //                 ],
+    //             ];
 
-                $current = json_decode($this->tempDir['examples']['public']['file1.json'], true);
+    //             $current = json_decode($this->tempDir['examples']['public']['file1.json'], true);
 
-                $this->assertEquals($expectedContent, $current);
-            });
-        });
+    //             $this->assertEquals($expectedContent, $current);
+    //         });
+    //     });
 
-        tearDownAfterClass(function () {
-            static::removeTempDir();
-        });
-    });
+    //     tearDownAfterClass(function () {
+    //         static::removeTempDir();
+    //     });
+    // });
 
     testCase('using a virtual file system', function () {
         testCase('exists a directory', function () {
@@ -189,38 +189,38 @@ testCase('ApplicationTest.php', function () {
                 $this->output = $commandTester->getDisplay();
             });
 
-            testCase('exists an invalid composer.lock file', function () {
-                setUp(function () {
-                    $this->composerLockFile = new vfsStreamFile('composer.lock');
-                    $this->composerLockFile->setContent(uniqid());
+            // testCase('exists an invalid composer.lock file', function () {
+            //     setUp(function () {
+            //         $this->composerLockFile = new vfsStreamFile('composer.lock');
+            //         $this->composerLockFile->setContent(uniqid());
 
-                    $this->rootDir->addChild($this->composerLockFile);
-                });
+            //         $this->rootDir->addChild($this->composerLockFile);
+            //     });
 
-                foreach (THEN_COMMANDS as $command) {
-                    test("the command '{$command}' shows error message when the composer.lock file is invalid", function () use ($command) {
-                        $this->runCommand($command, []);
+            //     foreach (THEN_COMMANDS as $command) {
+            //         test("the command '{$command}' shows error message when the composer.lock file is invalid", function () use ($command) {
+            //             $this->runCommand($command, []);
 
-                        $this->assertContains('The composer.lock file is corrupt.', $this->output);
-                    });
-                }
-            });
+            //             $this->assertContains('The composer.lock file is corrupt.', $this->output);
+            //         });
+            //     }
+            // });
 
-            testCase('exists a composer.lock file that contains two thenkits', function () {
+            testCase('exists a composer.lock file that contains two then packages', function () {
                 setUp(function () {
                     $this->composerLockContent = [
                         'packages' => [
                             [
-                                'name' => uniqid('kit'),
-                                'type' => 'thenkit',
+                                'name' => uniqid('package'),
+                                'type' => 'then-package',
                             ],
                             [
                                 'name' => uniqid('library'),
                                 'type' => 'library',
                             ],
                             [
-                                'name' => uniqid('kit'),
-                                'type' => 'thenkit',
+                                'name' => uniqid('package'),
+                                'type' => 'then-package',
                             ],
                         ]
                     ];
@@ -231,8 +231,8 @@ testCase('ApplicationTest.php', function () {
                     $this->rootDir->addChild($this->composerLockFile);
                 });
 
-                test('the command "kit:list:installed" shows the expected kits', function () {
-                    $this->runCommand('kit:list:installed', []);
+                test('the command "list:packages" shows the expected kits', function () {
+                    $this->runCommand('list:packages', []);
 
                     $this->assertContains(
                         $this->composerLockContent['packages'][0]['name'],
@@ -248,26 +248,26 @@ testCase('ApplicationTest.php', function () {
                     );
                 });
 
-                test('the command "kit:install" shows message The "then.json" file is missing.', function () {
-                    $this->runCommand('kit:install', []);
+                // test('the command "kit:install" shows message The "then.json" file is missing.', function () {
+                //     $this->runCommand('kit:install', []);
 
-                    $this->assertContains('The "then.json" file is missing.', $this->output);
-                });
+                //     $this->assertContains('The "then.json" file is missing.', $this->output);
+                // });
 
-                testCase('exists an invalid then.json file', function () {
-                    setUp(function () {
-                        $this->thenJsonFile = new vfsStreamFile('then.json');
-                        $this->thenJsonFile->setContent(uniqid());
+                // testCase('exists an invalid then.json file', function () {
+                //     setUp(function () {
+                //         $this->thenJsonFile = new vfsStreamFile('then.json');
+                //         $this->thenJsonFile->setContent(uniqid());
 
-                        $this->rootDir->addChild($this->thenJsonFile);
-                    });
+                //         $this->rootDir->addChild($this->thenJsonFile);
+                //     });
 
-                    test('the command "kit:install" shows message The "then.json" file is corrupt.', function () {
-                        $this->runCommand('kit:install', []);
+                //     test('the command "kit:install" shows message The "then.json" file is corrupt.', function () {
+                //         $this->runCommand('kit:install', []);
 
-                        $this->assertContains('The "then.json" file is corrupt.', $this->output);
-                    });
-                });
+                //         $this->assertContains('The "then.json" file is corrupt.', $this->output);
+                //     });
+                // });
             });
         });
     });

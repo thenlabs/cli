@@ -18,17 +18,17 @@ class ThenCommand extends Command
         $this->addArgument('directory', InputArgument::OPTIONAL, '', getcwd());
     }
 
-    protected function getInstalledKits(string $directory, OutputInterface $output): array
+    protected function getInstalledPackages(string $directory, OutputInterface $output): array
     {
         $composerLockFile = $directory.'/composer.lock';
-        $installedKits = [];
+        $installedPackages = [];
 
         if (file_exists($composerLockFile)) {
             $content = json_decode(file_get_contents($composerLockFile));
             if (is_object($content)) {
                 foreach ($content->packages as $package) {
-                    if ($package->type == 'thenkit') {
-                        $installedKits[] = $package->name;
+                    if ($package->type == 'then-package') {
+                        $installedPackages[] = $package->name;
                     }
                 }
             } else {
@@ -36,7 +36,7 @@ class ThenCommand extends Command
             }
         }
 
-        return $installedKits;
+        return $installedPackages;
     }
 
     protected function getThenJson(string $directory, OutputInterface $output)
