@@ -14,7 +14,7 @@ class ListPackagesCommand extends ThenCommand
     {
         parent::configure();
 
-        $this->setDescription('Lists all the installed then kits.');
+        $this->setDescription('Lists all the installed then packages.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

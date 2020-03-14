@@ -2,7 +2,7 @@
     "packages": [
         {
             "name": "vendor1/package11",
-            "type": "thenkit"
+            "type": "then-package"
         },
         {
             "name": "vendor1/package12",
@@ -10,11 +10,11 @@
         },
         {
             "name": "vendor1/package13",
-            "type": "thenkit"
+            "type": "then-package"
         },
         {
             "name": "vendor2/package21",
-            "type": "thenkit"
+            "type": "then-package"
         }
     ]
 }
