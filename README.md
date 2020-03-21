@@ -1,14 +1,14 @@
 
 # ThenLabs CLI.
 
-The command line tools for manage the PHP packages of the ThenLabs community.
+The command line interface for manage the PHP **then packages**.
 
 ## Documentation.
 
 1. English (Pending)
 2. [Español](docs/es/index.md)
 
-## Licencia.
+## License.
 
 - [MIT](https://es.wikipedia.org/wiki/Licencia_MIT)
 
