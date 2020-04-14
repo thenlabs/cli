@@ -19,7 +19,7 @@ Dado que las operaciones que ciertos comandos realizan dependen de un directorio
 
 Dicho de otra manera, el archivo `then.json` servirá para indicarle a la consola determinada configuración que se debe tener en cuenta a la hora de operar sobre un directorio, mientras que el archivo `then-package.json` de un paquete contendrá determinada información sobre la forma de tratar e interpretar al mismo.
 
-## Trabajando con *assets*.
+## Trabajando con assets.
 
 Una de las características que tienen los *then packages* es que los mismos pueden contener archivos de recursos web como es el caso de *scripts*, hojas de estilo, imágenes, etc.
 
