@@ -1,5 +1,5 @@
 
-# ThenLabs CLI.
+# ThenLabs CLI
 
 Bienvenido a la documentación en español de la interfaz de línea de comandos de [ThenLabs][ThenLabs] para proyectos PHP.
 
