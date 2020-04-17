@@ -6,7 +6,7 @@ The command line interface for manage the PHP **then packages**.
 ## Documentation.
 
 1. English (Pending)
-2. [Español](docs/es/index.md)
+2. [Español](http://thenlabs.org/docs/cli/master/es/index.html)
 
 ## License.
 
