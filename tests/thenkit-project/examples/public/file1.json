@@ -1,9 +1,0 @@
-{
-    "dependencies": {
-        "dep4": "version4",
-        "dep5": "version5"
-    },
-    "devDependencies": {
-        "devDep4": "v4"
-    }
-}

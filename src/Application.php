@@ -13,8 +13,5 @@ class Application extends SymfonyConsoleApplication
     public function __construct()
     {
         parent::__construct();
-
-        $this->add(new Command\ListPackagesCommand);
-        $this->add(new Command\InstallAssetsCommand);
     }
 }
