@@ -19,7 +19,7 @@ class Application extends SymfonyApplication
     {
         parent::__construct();
 
-        $this->add(new Command\Assets\ListPackagesCommand);
+        $this->add(new Command\Assets\ListCommand);
 
         $this->workingDirectory = getcwd();
     }

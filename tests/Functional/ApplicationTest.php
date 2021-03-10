@@ -28,7 +28,7 @@ testCase('ApplicationTest.php', function () {
     testCase(function () {
         setUpBeforeClass(function () {
             $application = static::getVar('application');
-            $command = $application->find('assets:list-packages');
+            $command = $application->find('assets:list');
 
             $commandTester = new CommandTester($command);
             $commandTester->execute([]);
