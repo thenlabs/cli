@@ -10,8 +10,23 @@ use Symfony\Component\Console\Application as SymfonyApplication;
  */
 class Application extends SymfonyApplication
 {
+    /**
+     * @var string
+     */
+    protected $workingDirectory;
+
     public function __construct()
     {
         parent::__construct();
+    }
+
+    public function setWorkingDirectory(string $workingDirectory): void
+    {
+        $this->workingDirectory = $workingDirectory;
+    }
+
+    public function getWorkingDirectory(): string
+    {
+        return $this->workingDirectory;
     }
 }
