@@ -1,0 +1,13 @@
+{
+    "packages": [
+        {
+            "name": "vendor1/package1"
+        },
+        {
+            "name": "vendor1/package2"
+        },
+        {
+            "name": "vendor2/package1"
+        }
+    ]
+}
