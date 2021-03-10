@@ -5,10 +5,11 @@ namespace ThenLabs\Cli\Command\Assets;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Helper\Table;
 
 class ListCommand extends Command
 {
-    protected static $defaultName = 'assets:list-packages';
+    protected static $defaultName = 'assets:list';
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -29,6 +30,7 @@ class ListCommand extends Command
             return Command::FAILURE;
         }
 
+        $rows = [];
         $installedComposerPackages = $composerLockFileContent['packages'];
 
         foreach ($installedComposerPackages as $packageData) {
@@ -39,16 +41,18 @@ class ListCommand extends Command
             if (file_exists($thenPackageFile)) {
                 $thenPackageFileContent = json_decode(file_get_contents($thenPackageFile), true);
 
-                if (! is_array($thenPackageFileContent)) {
-                    $output->writeln('The "{$thenPackageFile}" file is corrupt.');
-                    return Command::FAILURE;
-                }
-
-                if (isset($thenPackageFileContent['assets'])) {
-                    $output->writeln($packageName);
+                if (is_array($thenPackageFileContent) &&
+                    isset($thenPackageFileContent['assets'])
+                ) {
+                    $rows[] = [$packageName];
                 }
             }
         }
+
+        $table = new Table($output);
+        $table->setHeaders(['Package']);
+        $table->setRows($rows);
+        $table->render();
 
         return Command::SUCCESS;
     }
