@@ -1,6 +1,5 @@
 vendor/
-tests/temp/
-!tests/project/vendor/
+!tests/Functional/project/vendor/
 .*
 !.editorconfig
 !.gitignore

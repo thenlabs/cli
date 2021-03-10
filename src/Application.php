@@ -18,6 +18,10 @@ class Application extends SymfonyApplication
     public function __construct()
     {
         parent::__construct();
+
+        $this->add(new Command\Assets\ListPackagesCommand);
+
+        $this->workingDirectory = getcwd();
     }
 
     public function setWorkingDirectory(string $workingDirectory): void
