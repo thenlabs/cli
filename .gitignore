@@ -1,5 +1,5 @@
 vendor/
-tests/temp*/
+tests/temp/
 !tests/project/vendor/
 .*
 !.editorconfig

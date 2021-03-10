@@ -1,7 +1,14 @@
 #!/usr/bin/env php
 <?php
 
-require_once __DIR__.'/../../autoload.php';
+$autoloadFileName = __DIR__.'/../../autoload.php';
+
+if (! file_exists($autoloadFileName)) {
+    // autoload for development.
+    $autoloadFileName = __DIR__.'/vendor/autoload.php';
+}
+
+require_once $autoloadFileName;
 
 use ThenLabs\Cli\Application;
 
