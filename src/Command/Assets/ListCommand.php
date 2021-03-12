@@ -6,6 +6,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Finder\Finder;
 
 class ListCommand extends Command
 {
@@ -30,7 +31,7 @@ class ListCommand extends Command
             return Command::FAILURE;
         }
 
-        $rows = [];
+        $tableRows = [];
         $installedComposerPackages = $composerLockFileContent['packages'];
 
         foreach ($installedComposerPackages as $packageData) {
@@ -42,18 +43,43 @@ class ListCommand extends Command
                 $thenPackageFileContent = json_decode(file_get_contents($thenPackageFile), true);
 
                 if (is_array($thenPackageFileContent) &&
-                    isset($thenPackageFileContent['assets'])
+                    isset($thenPackageFileContent['assets']) &&
+                    is_array($thenPackageFileContent['assets'])
                 ) {
-                    $rows[] = [$packageName];
+                    $totalOfFiles = 0;
+                    $totalSize = 0;
+
+                    foreach ($thenPackageFileContent['assets'] as $pattern) {
+                        $fileNames = glob($packageDir.'/'.$pattern);
+
+                        $totalOfFiles += count($fileNames);
+
+                        foreach ($fileNames as $fileName) {
+                            $totalSize += filesize($fileName);
+                        }
+                    }
+
+                    $tableRows[] = [$packageName, $totalOfFiles, $this->bytesToHuman($totalSize)];
                 }
             }
         }
 
         $table = new Table($output);
-        $table->setHeaders(['Package']);
-        $table->setRows($rows);
+        $table->setHeaders(['Package', 'Total of files', 'Total size']);
+        $table->setRows($tableRows);
         $table->render();
 
         return Command::SUCCESS;
+    }
+
+    public function bytesToHuman(int $bytes): string
+    {
+        $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+
+        for ($i = 0; $bytes > 1024; $i++) {
+            $bytes /= 1024;
+        }
+
+        return round($bytes, 2) . ' ' . $units[$i];
     }
 }
