@@ -39,10 +39,25 @@ testCase('ApplicationTest.php', function () {
         });
 
         test(function () {
-            $this->assertContains(
-                '| vendor1/package1 | 2              | 4 B        |',
-                $this->output
-            );
+            $this->assertContains('vendor1/package1', $this->output);
         });
+
+        // testCase(function () {
+        //     setUpBeforeClass(function () {
+        //         $application = static::getVar('application');
+        //         $command = $application->find('assets:copy');
+
+        //         $commandTester = new CommandTester($command);
+        //         $commandTester->execute([]);
+
+        //         $output = $commandTester->getDisplay();
+
+        //         static::setVar('output', $output);
+        //     });
+
+        //     test(function () {
+        //         $this->assertContains('a.txt => a.txt', $this->output);
+        //     });
+        // });
     });
 });

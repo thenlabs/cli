@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Finder\Finder;
+use Exception;
 
 class ListCommand extends Command
 {
@@ -17,21 +18,58 @@ class ListCommand extends Command
         $application = $this->getApplication();
         $workingDirectory = $application->getWorkingDirectory();
 
+        try {
+            $fileList = self::getFileList($workingDirectory);
+
+            $table = new Table($output);
+            $table->setHeaders(['Package', 'Total of files', 'Total size']);
+
+            foreach ($fileList as $packageName => $fileNames) {
+                $totalOfFiles = count($fileNames);
+                $totalSize = 0;
+
+                foreach ($fileNames as $fileName) {
+                    $totalSize += filesize($fileName);
+                }
+
+                $table->addRow([$packageName, $totalOfFiles, $totalSize]);
+            }
+
+            $table->render();
+            return Command::SUCCESS;
+        } catch (Exception $exception) {
+            $output->writeln($exception->getMessage());
+            return Command::FAILURE;
+        }
+    }
+
+    public function bytesToHuman(int $bytes): string
+    {
+        $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+
+        for ($i = 0; $bytes > 1024; $i++) {
+            $bytes /= 1024;
+        }
+
+        return round($bytes, 2) . ' ' . $units[$i];
+    }
+
+    public static function getFileList(string $workingDirectory): array
+    {
+        $result = [];
+
         $composerLockFile = $workingDirectory.'/composer.lock';
 
         if (! file_exists($composerLockFile)) {
-            $output->writeln('The "composer.lock" file is missing.');
-            return Command::FAILURE;
+            throw new Exception('The "composer.lock" file is missing.');
         }
 
         $composerLockFileContent = json_decode(file_get_contents($composerLockFile), true);
 
         if (! is_array($composerLockFileContent)) {
-            $output->writeln('The "composer.lock" file is corrupt.');
-            return Command::FAILURE;
+            throw new Exception('The "composer.lock" file is corrupt.');
         }
 
-        $tableRows = [];
         $installedComposerPackages = $composerLockFileContent['packages'];
 
         foreach ($installedComposerPackages as $packageData) {
@@ -46,40 +84,19 @@ class ListCommand extends Command
                     isset($thenPackageFileContent['assets']) &&
                     is_array($thenPackageFileContent['assets'])
                 ) {
-                    $totalOfFiles = 0;
-                    $totalSize = 0;
+                    $result[$packageName] = [];
 
                     foreach ($thenPackageFileContent['assets'] as $pattern) {
                         $fileNames = glob($packageDir.'/'.$pattern);
 
-                        $totalOfFiles += count($fileNames);
-
                         foreach ($fileNames as $fileName) {
-                            $totalSize += filesize($fileName);
+                            $result[$packageName][] = $fileName;
                         }
                     }
-
-                    $tableRows[] = [$packageName, $totalOfFiles, $this->bytesToHuman($totalSize)];
                 }
             }
         }
 
-        $table = new Table($output);
-        $table->setHeaders(['Package', 'Total of files', 'Total size']);
-        $table->setRows($tableRows);
-        $table->render();
-
-        return Command::SUCCESS;
-    }
-
-    public function bytesToHuman(int $bytes): string
-    {
-        $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
-
-        for ($i = 0; $bytes > 1024; $i++) {
-            $bytes /= 1024;
-        }
-
-        return round($bytes, 2) . ' ' . $units[$i];
+        return $result;
     }
 }
