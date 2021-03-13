@@ -1,7 +1,7 @@
 
 # CLI.
 
-Command line interface tools for PHP packages.
+Command line tools for PHP packages.
 
 ## License.
 
