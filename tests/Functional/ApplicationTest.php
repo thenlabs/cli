@@ -52,22 +52,26 @@ testCase('ApplicationTest.php', function () {
             );
         });
 
-        // testCase(function () {
-        //     setUpBeforeClass(function () {
-        //         $application = static::getVar('application');
-        //         $command = $application->find('assets:copy');
+        testCase(function () {
+            setUpBeforeClass(function () {
+                $application = static::getVar('application');
+                $command = $application->find('assets:copy');
 
-        //         $commandTester = new CommandTester($command);
-        //         $commandTester->execute([]);
+                $commandTester = new CommandTester($command);
+                $commandTester->execute([]);
 
-        //         $output = $commandTester->getDisplay();
+                $output = $commandTester->getDisplay();
 
-        //         static::setVar('output', $output);
-        //     });
+                static::setVar('output', $output);
+                static::setVar('tempDir', static::readDirectoryInArray(TEMP_PROJECT_DIR));
+            });
 
-        //     test(function () {
-        //         $this->assertContains('a.txt => a.txt', $this->output);
-        //     });
-        // });
+            test(function () {
+                $this->assertEquals(
+                    $this->tempDir['vendor']['vendor1']['package1']['assets'],
+                    $this->tempDir['public']['vendor1']['package1'],
+                );
+            });
+        });
     });
 });
