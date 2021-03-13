@@ -72,6 +72,21 @@ testCase('ApplicationTest.php', function () {
                     $this->tempDir['public']['vendor1']['package1'],
                 );
             });
+
+            test(function () {
+                $this->assertEquals(
+                    $this->tempDir['vendor']['vendor1']['package2']['resources']['script.js'],
+                    $this->tempDir['public']['vendor1']['package2']['script.js'],
+                );
+                $this->assertEquals(
+                    $this->tempDir['vendor']['vendor1']['package2']['resources']['style.css'],
+                    $this->tempDir['public']['vendor1']['package2']['style.css'],
+                );
+                $this->assertEquals(
+                    $this->tempDir['vendor']['vendor1']['package2']['resources']['style1.css'],
+                    $this->tempDir['public']['vendor1']['package2']['style1.css'],
+                );
+            });
         });
     });
 });
