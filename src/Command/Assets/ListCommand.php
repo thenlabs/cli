@@ -32,7 +32,7 @@ class ListCommand extends Command
                     $totalSize += filesize($fileName);
                 }
 
-                $table->addRow([$packageName, $totalOfFiles, $totalSize]);
+                $table->addRow([$packageName, $totalOfFiles, $this->bytesToHuman($totalSize)]);
             }
 
             $table->render();

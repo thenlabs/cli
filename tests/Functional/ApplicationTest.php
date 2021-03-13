@@ -39,7 +39,17 @@ testCase('ApplicationTest.php', function () {
         });
 
         test(function () {
-            $this->assertContains('vendor1/package1', $this->output);
+            $this->assertContains(
+                '| vendor1/package1 | 2              | 4 B        |',
+                $this->output
+            );
+        });
+
+        test(function () {
+            $this->assertContains(
+                '| vendor1/package2 | 3              | 43 B       |',
+                $this->output
+            );
         });
 
         // testCase(function () {

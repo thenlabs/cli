@@ -1,0 +1,6 @@
+{
+    "assets": [
+        "resources/*.css",
+        "resources/*.js"
+    ]
+}
