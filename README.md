@@ -1,12 +1,7 @@
 
-# ThenLabs CLI.
+# CLI.
 
-The command line interface for manage the PHP **then packages**.
-
-## Documentation.
-
-1. English (Pending)
-2. [Español](http://thenlabs.org/docs/cli/master/es/index.html)
+Command line interface tools for PHP packages.
 
 ## License.
 
@@ -16,5 +11,5 @@ The command line interface for manage the PHP **then packages**.
 
 Run the next command:
 
-    $ composer require thenlabs/cli dev-master --dev
+    $ composer require thenlabs/cli --dev
 
