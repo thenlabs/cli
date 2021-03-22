@@ -9,7 +9,8 @@
     ],
     "require": {
         "symfony/console": ">=4.4",
-        "symfony/filesystem": ">=4.4"
+        "symfony/filesystem": ">=4.4",
+        "symfony/finder": ">=4.4"
     },
     "autoload": {
         "psr-4": {
@@ -23,8 +24,7 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.12",
-        "thenlabs/pyramidal-tests": "^1.0",
-        "symfony/finder": ">=4.4"
+        "thenlabs/pyramidal-tests": "^1.0"
     },
     "bin": [
         "then"

@@ -2,6 +2,7 @@
 
 namespace ThenLabs\Cli\Command\Assets;
 
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -89,7 +90,14 @@ class ListCommand extends Command
                         $fileNames = glob($packageDir.'/'.$pattern);
 
                         foreach ($fileNames as $fileName) {
-                            $result[$packageName][] = $fileName;
+                            if (is_dir($fileName)) {
+                                $finder = new Finder;
+                                foreach ($finder->files()->in($fileName) as $fileName1) {
+                                    $result[$packageName][] = $fileName1;
+                                }
+                            } else {
+                                $result[$packageName][] = $fileName;
+                            }
                         }
                     }
                 }

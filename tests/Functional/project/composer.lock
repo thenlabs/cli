@@ -8,6 +8,9 @@
         },
         {
             "name": "vendor2/package1"
+        },
+        {
+            "name": "vendor2/package2"
         }
     ]
 }
