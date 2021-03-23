@@ -20,23 +20,21 @@ class CopyCommand extends Command
             $filesystem = new Filesystem;
 
             $thenJson = json_decode(file_get_contents($workingDirectory.'/then.json'), true);
-            $targetDir = $workingDirectory.'/'.$thenJson['assets']['targetDir'];
+            $targetAssetsDir = $workingDirectory.'/'.$thenJson['targetAssetsDir'];
 
             $fileList = ListCommand::getFileList($workingDirectory);
 
             foreach ($fileList as $packageName => $fileNames) {
-                $targetPackageDir = $targetDir.'/'.$packageName;
+                $targetPackageDir = $targetAssetsDir.'/'.$packageName;
 
-                if (! $filesystem->exists($targetPackageDir)) {
-                    $filesystem->mkdir($targetPackageDir);
-                }
+                $packageDir = "{$workingDirectory}/vendor/{$packageName}";
+                $thenPackageFile = "{$packageDir}/then-package.json";
+                $thenPackageFileContent = json_decode(file_get_contents($thenPackageFile), true);
 
-                foreach ($fileNames as $fileName) {
-                    $targetFileName = $targetPackageDir.'/'.basename($fileName);
-                    $filesystem->copy($fileName, $targetFileName);
-
-                    $output->writeln($targetFileName);
-                }
+                $filesystem->mirror(
+                    $packageDir.'/'.$thenPackageFileContent['assetsDir'],
+                    $targetPackageDir
+                );
             }
 
             return Command::SUCCESS;

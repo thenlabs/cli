@@ -48,7 +48,7 @@ testCase('ApplicationTest.php', function () {
 
         test(function () {
             $this->assertContains(
-                '| vendor1/package2 | 3              | 43 B       |',
+                '| vendor1/package2 | 4              | 55 B       |',
                 $this->output
             );
         });
@@ -83,16 +83,8 @@ testCase('ApplicationTest.php', function () {
 
             test(function () {
                 $this->assertEquals(
-                    $this->tempDir['vendor']['vendor1']['package2']['resources']['script.js'],
-                    $this->tempDir['public']['vendor1']['package2']['script.js'],
-                );
-                $this->assertEquals(
-                    $this->tempDir['vendor']['vendor1']['package2']['resources']['style.css'],
-                    $this->tempDir['public']['vendor1']['package2']['style.css'],
-                );
-                $this->assertEquals(
-                    $this->tempDir['vendor']['vendor1']['package2']['resources']['style1.css'],
-                    $this->tempDir['public']['vendor1']['package2']['style1.css'],
+                    $this->tempDir['vendor']['vendor1']['package2']['resources'],
+                    $this->tempDir['public']['vendor1']['package2'],
                 );
             });
 

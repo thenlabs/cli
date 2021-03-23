@@ -81,25 +81,10 @@ class ListCommand extends Command
                 $thenPackageFileContent = json_decode(file_get_contents($thenPackageFile), true);
 
                 if (is_array($thenPackageFileContent) &&
-                    isset($thenPackageFileContent['assets']) &&
-                    is_array($thenPackageFileContent['assets'])
+                    isset($thenPackageFileContent['assetsDir'])
                 ) {
-                    $result[$packageName] = [];
-
-                    foreach ($thenPackageFileContent['assets'] as $pattern) {
-                        $fileNames = glob($packageDir.'/'.$pattern);
-
-                        foreach ($fileNames as $fileName) {
-                            if (is_dir($fileName)) {
-                                $finder = new Finder;
-                                foreach ($finder->files()->in($fileName) as $fileName1) {
-                                    $result[$packageName][] = $fileName1;
-                                }
-                            } else {
-                                $result[$packageName][] = $fileName;
-                            }
-                        }
-                    }
+                    $finder = new Finder;
+                    $result[$packageName] = $finder->files()->in($packageDir.'/'.$thenPackageFileContent['assetsDir']);
                 }
             }
         }
