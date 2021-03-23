@@ -1,10 +1,11 @@
 <?php
 
-namespace ThenLabs\Cli\Tests;
+namespace ThenLabs\Cli\Tests\Functional;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Console\Tester\CommandTester;
 use ThenLabs\Cli\Application;
+use ThenLabs\Cli\Tests\TestCase;
 
 setTestCaseClass(TestCase::class);
 setTestCaseNamespace(__NAMESPACE__);
@@ -52,6 +53,13 @@ testCase('ApplicationTest.php', function () {
             );
         });
 
+        test(function () {
+            $this->assertContains(
+                '| vendor2/package2 | 5              | 15 B       |',
+                $this->output
+            );
+        });
+
         testCase(function () {
             setUpBeforeClass(function () {
                 $application = static::getVar('application');
@@ -85,6 +93,13 @@ testCase('ApplicationTest.php', function () {
                 $this->assertEquals(
                     $this->tempDir['vendor']['vendor1']['package2']['resources']['style1.css'],
                     $this->tempDir['public']['vendor1']['package2']['style1.css'],
+                );
+            });
+
+            test(function () {
+                $this->assertEquals(
+                    $this->tempDir['vendor']['vendor2']['package2']['assets'],
+                    $this->tempDir['public']['vendor2']['package2'],
                 );
             });
         });
