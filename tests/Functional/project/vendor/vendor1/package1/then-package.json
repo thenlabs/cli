@@ -1,3 +1,9 @@
 {
-    "assetsDir": "assets"
+    "assetsDir": "assets",
+    "beforeCopy": [
+        "touch before.txt"
+    ],
+    "afterCopy": [
+        "touch after.txt"
+    ]
 }

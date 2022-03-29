@@ -65,7 +65,7 @@ testCase('test-Application.php', function () {
             staticProperty('tempDir');
 
             setUpBeforeClass(function () {
-                $command = static::$application->find('assets:copy');
+                $command = static::$application->find('assets:install');
 
                 $commandTester = new CommandTester($command);
                 $commandTester->execute([]);
@@ -75,8 +75,12 @@ testCase('test-Application.php', function () {
             });
 
             test(function () {
+                $expected = static::$tempDir['vendor']['vendor1']['package1']['assets'];
+                $expected['before.txt'] = '';
+                $expected['after.txt'] = '';
+
                 $this->assertEquals(
-                    static::$tempDir['vendor']['vendor1']['package1']['assets'],
+                    $expected,
                     static::$tempDir['public']['vendor1']['package1'],
                 );
             });

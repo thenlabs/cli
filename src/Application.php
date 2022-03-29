@@ -20,7 +20,7 @@ class Application extends SymfonyApplication
         parent::__construct();
 
         $this->add(new Command\Assets\ListCommand);
-        $this->add(new Command\Assets\CopyCommand);
+        $this->add(new Command\Assets\InstallCommand);
 
         $this->workingDirectory = getcwd();
     }
