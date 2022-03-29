@@ -2,8 +2,8 @@
 
 namespace ThenLabs\Cli\Tests\Functional;
 
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Filesystem\Filesystem;
 use ThenLabs\Cli\Application;
 use ThenLabs\Cli\Tests\TestCase;
 

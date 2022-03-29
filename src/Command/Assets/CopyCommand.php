@@ -2,11 +2,11 @@
 
 namespace ThenLabs\Cli\Command\Assets;
 
-use Symfony\Component\Filesystem\Filesystem;
+use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Exception;
+use Symfony\Component\Filesystem\Filesystem;
 
 class CopyCommand extends Command
 {
