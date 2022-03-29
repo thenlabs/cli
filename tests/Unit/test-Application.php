@@ -6,9 +6,8 @@ use ThenLabs\Cli\Application;
 use ThenLabs\Cli\Tests\TestCase;
 
 setTestCaseClass(TestCase::class);
-setTestCaseNamespace(__NAMESPACE__);
 
-testCase('ApplicationTest.php', function () {
+testCase('test-Application.php', function () {
     test(function () {
         $application = new Application;
         $directory = uniqid('dir');

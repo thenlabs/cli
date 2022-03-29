@@ -8,9 +8,10 @@ use ThenLabs\Cli\Application;
 use ThenLabs\Cli\Tests\TestCase;
 
 setTestCaseClass(TestCase::class);
-setTestCaseNamespace(__NAMESPACE__);
 
-testCase('ApplicationTest.php', function () {
+testCase('test-Application.php', function () {
+    staticProperty('application');
+
     setUpBeforeClass(function () {
         $filesystem = new Filesystem;
 
@@ -23,75 +24,74 @@ testCase('ApplicationTest.php', function () {
         $application = new Application;
         $application->setWorkingDirectory(TEMP_PROJECT_DIR);
 
-        static::setVar('application', $application);
+        static::$application = $application;
     });
 
     testCase(function () {
+        staticProperty('output');
+
         setUpBeforeClass(function () {
-            $application = static::getVar('application');
-            $command = $application->find('assets:list');
+            $command = static::$application->find('assets:list');
 
             $commandTester = new CommandTester($command);
             $commandTester->execute([]);
 
-            $output = $commandTester->getDisplay();
-
-            static::setVar('output', $output);
+            static::$output = $commandTester->getDisplay();
         });
 
         test(function () {
-            $this->assertContains(
+            $this->assertStringContainsString(
                 '| vendor1/package1 | 2              | 4 B        |',
-                $this->output
+                static::$output
             );
         });
 
         test(function () {
-            $this->assertContains(
+            $this->assertStringContainsString(
                 '| vendor1/package2 | 4              | 55 B       |',
-                $this->output
+                static::$output
             );
         });
 
         test(function () {
-            $this->assertContains(
+            $this->assertStringContainsString(
                 '| vendor2/package2 | 5              | 15 B       |',
-                $this->output
+                static::$output
             );
         });
 
         testCase(function () {
+            staticProperty('output');
+            staticProperty('tempDir');
+
             setUpBeforeClass(function () {
-                $application = static::getVar('application');
-                $command = $application->find('assets:copy');
+                $command = static::$application->find('assets:copy');
 
                 $commandTester = new CommandTester($command);
                 $commandTester->execute([]);
 
-                $output = $commandTester->getDisplay();
-
-                static::setVar('output', $output);
-                static::setVar('tempDir', static::readDirectoryInArray(TEMP_PROJECT_DIR));
+                static::$output = $commandTester->getDisplay();
+                static::$tempDir = static::readDirectoryInArray(TEMP_PROJECT_DIR);
             });
 
             test(function () {
                 $this->assertEquals(
-                    $this->tempDir['vendor']['vendor1']['package1']['assets'],
-                    $this->tempDir['public']['vendor1']['package1'],
+                    static::$tempDir['vendor']['vendor1']['package1']['assets'],
+                    static::$tempDir['public']['vendor1']['package1'],
                 );
             });
 
             test(function () {
                 $this->assertEquals(
-                    $this->tempDir['vendor']['vendor1']['package2']['resources'],
-                    $this->tempDir['public']['vendor1']['package2'],
+                    static::$tempDir['vendor']['vendor1']['package2']['resources'],
+                    static::$tempDir['public']['vendor1']['package2'],
                 );
             });
 
             test(function () {
                 $this->assertEquals(
-                    $this->tempDir['vendor']['vendor2']['package2']['assets'],
-                    $this->tempDir['public']['vendor2']['package2'],
+                    static::$tempDir['vendor']['vendor2']['package2']['assets'],
+                    static::$tempDir['public']['vendor2']['package2'],
                 );
             });
         });
